@@ -1,0 +1,300 @@
+{
+  "team": "Legions Div C",
+  "matches": [
+    {
+      "id": "M3",
+      "opponent": "Jersey Titans Cricket Club",
+      "date": ""
+    },
+    {
+      "id": "M4",
+      "opponent": "Dreamcricket Panthers",
+      "date": ""
+    },
+    {
+      "id": "M5",
+      "opponent": "Indus Jr",
+      "date": ""
+    }
+  ],
+  "players": [
+    {
+      "name": "Anuj",
+      "group": "Openers",
+      "scores": {
+        "M3": {
+          "runs": 3,
+          "balls": 4,
+          "notOut": false
+        },
+        "M4": {
+          "runs": 6,
+          "balls": 10,
+          "notOut": false
+        },
+        "M5": {
+          "runs": 2,
+          "balls": 17,
+          "notOut": false
+        }
+      }
+    },
+    {
+      "name": "Sid",
+      "group": "Openers",
+      "scores": {
+        "M3": {
+          "runs": 11,
+          "balls": 20,
+          "notOut": false
+        },
+        "M5": {
+          "runs": 0,
+          "balls": 3,
+          "notOut": false
+        }
+      }
+    },
+    {
+      "name": "Aakash",
+      "group": "Openers",
+      "scores": {
+        "M4": {
+          "runs": 0,
+          "balls": 2,
+          "notOut": false
+        }
+      }
+    },
+    {
+      "name": "GT",
+      "group": "Openers",
+      "scores": {
+        "M5": {
+          "runs": 22,
+          "balls": 16,
+          "notOut": false
+        }
+      }
+    },
+    {
+      "name": "Harsh",
+      "group": "Openers",
+      "scores": {}
+    },
+    {
+      "name": "Virat",
+      "group": "Middle Order",
+      "scores": {
+        "M3": {
+          "runs": 27,
+          "balls": 32,
+          "notOut": false
+        },
+        "M4": {
+          "runs": 15,
+          "balls": 42,
+          "notOut": false
+        },
+        "M5": {
+          "runs": 9,
+          "balls": 28,
+          "notOut": false
+        }
+      }
+    },
+    {
+      "name": "Jaemeel",
+      "group": "Middle Order",
+      "scores": {
+        "M4": {
+          "runs": 16,
+          "balls": 36,
+          "notOut": false
+        },
+        "M5": {
+          "runs": 27,
+          "balls": 70,
+          "notOut": false
+        }
+      }
+    },
+    {
+      "name": "Raghav",
+      "group": "Middle Order",
+      "scores": {
+        "M3": {
+          "runs": 37,
+          "balls": 37,
+          "notOut": false
+        },
+        "M4": {
+          "runs": 1,
+          "balls": 10,
+          "notOut": false
+        },
+        "M5": {
+          "runs": 14,
+          "balls": 27,
+          "notOut": false
+        }
+      }
+    },
+    {
+      "name": "Ajay",
+      "group": "Middle Order",
+      "scores": {
+        "M3": {
+          "runs": 12,
+          "balls": 15,
+          "notOut": false
+        }
+      }
+    },
+    {
+      "name": "Sugin",
+      "group": "Middle Order",
+      "scores": {
+        "M3": {
+          "runs": 12,
+          "balls": 19,
+          "notOut": false
+        }
+      }
+    },
+    {
+      "name": "Naineet",
+      "group": "Middle Order",
+      "scores": {
+        "M5": {
+          "runs": 2,
+          "balls": 4,
+          "notOut": false
+        }
+      }
+    },
+    {
+      "name": "Mujtaba",
+      "group": "Finisher",
+      "scores": {
+        "M3": {
+          "runs": 4,
+          "balls": 4,
+          "notOut": false
+        },
+        "M4": {
+          "runs": 4,
+          "balls": 12,
+          "notOut": false
+        }
+      }
+    },
+    {
+      "name": "AJ",
+      "group": "Finisher",
+      "scores": {
+        "M3": {
+          "runs": 4,
+          "balls": 15,
+          "notOut": false
+        },
+        "M4": {
+          "runs": 0,
+          "balls": 2,
+          "notOut": false
+        }
+      }
+    },
+    {
+      "name": "Kannan",
+      "group": "Finisher",
+      "scores": {
+        "M3": {
+          "runs": 6,
+          "balls": 8,
+          "notOut": true
+        },
+        "M4": {
+          "runs": 1,
+          "balls": 2,
+          "notOut": false
+        },
+        "M5": {
+          "runs": 2,
+          "balls": 7,
+          "notOut": false
+        }
+      }
+    },
+    {
+      "name": "Yuvraj",
+      "group": "Tailender",
+      "scores": {
+        "M4": {
+          "runs": 2,
+          "balls": 12,
+          "notOut": false
+        }
+      }
+    },
+    {
+      "name": "Daswanth",
+      "group": "Tailender",
+      "scores": {
+        "M3": {
+          "runs": 0,
+          "balls": 1,
+          "notOut": false
+        },
+        "M4": {
+          "runs": 0,
+          "balls": 1,
+          "notOut": false
+        },
+        "M5": {
+          "runs": 2,
+          "balls": 5,
+          "notOut": false
+        }
+      }
+    },
+    {
+      "name": "Sobin",
+      "group": "Tailender",
+      "scores": {
+        "M3": {
+          "runs": 1,
+          "balls": 3,
+          "notOut": false
+        }
+      }
+    },
+    {
+      "name": "Ravi",
+      "group": "Tailender",
+      "scores": {
+        "M4": {
+          "runs": 2,
+          "balls": 14,
+          "notOut": false
+        },
+        "M5": {
+          "runs": 4,
+          "balls": 17,
+          "notOut": false
+        }
+      }
+    },
+    {
+      "name": "Punit",
+      "group": "Tailender",
+      "scores": {
+        "M5": {
+          "runs": 1,
+          "balls": 2,
+          "notOut": false
+        }
+      }
+    }
+  ]
+}
