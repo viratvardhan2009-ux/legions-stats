@@ -1,0 +1,1950 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Legions Div C · Cricket Stats</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0b;
+    --surface: #131316;
+    --surface-2: #1c1c21;
+    --surface-3: #26262d;
+    --border: #2a2a32;
+    --border-soft: #1e1e25;
+    --text: #f5f5f7;
+    --text-2: #a1a1aa;
+    --text-3: #6b6b75;
+    --bat: #22c55e;
+    --bat-dim: #16a34a;
+    --bat-bg: rgba(34,197,94,0.08);
+    --bowl: #f97316;
+    --bowl-dim: #ea580c;
+    --bowl-bg: rgba(249,115,22,0.08);
+    --warn: #f59e0b;
+    --danger: #ef4444;
+    --radius: 12px;
+    --radius-sm: 8px;
+    --shadow: 0 1px 0 rgba(255,255,255,0.04) inset, 0 8px 24px rgba(0,0,0,0.4);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Geist', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 15px;
+    line-height: 1.5;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+  body {
+    background-image:
+      radial-gradient(ellipse 800px 600px at 50% -10%, rgba(34,197,94,0.05), transparent 60%),
+      radial-gradient(ellipse 600px 400px at 100% 50%, rgba(249,115,22,0.04), transparent 60%);
+  }
+
+  /* ============ HEADER ============ */
+  header {
+    border-bottom: 1px solid var(--border);
+    background: rgba(10,10,11,0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    position: sticky; top: 0; z-index: 50;
+  }
+  .header-inner {
+    max-width: 1280px; margin: 0 auto;
+    padding: 16px 24px;
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  }
+  .brand { display: flex; align-items: center; gap: 12px; }
+  .brand-mark {
+    width: 36px; height: 36px; border-radius: 10px;
+    background: linear-gradient(135deg, var(--bat), var(--bat-dim));
+    display: grid; place-items: center;
+    color: #052e16; font-weight: 700;
+    box-shadow: 0 0 0 1px rgba(34,197,94,0.3), 0 8px 24px rgba(34,197,94,0.15);
+  }
+  .brand-mark svg { width: 20px; height: 20px; }
+  .brand-text { display: flex; flex-direction: column; line-height: 1.1; }
+  .brand-name { font-family: 'Instrument Serif', serif; font-size: 22px; letter-spacing: -0.01em; }
+  .brand-sub {
+    font-family: 'Geist Mono', monospace; font-size: 10px;
+    color: var(--text-3); text-transform: uppercase; letter-spacing: 0.1em;
+    margin-top: 2px;
+  }
+  .header-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
+  .btn {
+    font-family: 'Geist', sans-serif;
+    font-size: 13px; font-weight: 500;
+    padding: 8px 14px; border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: var(--surface-2); color: var(--text);
+    cursor: pointer; transition: all 0.15s ease;
+    display: inline-flex; align-items: center; gap: 6px;
+    white-space: nowrap;
+  }
+  .btn:hover { background: var(--surface-3); border-color: #3a3a44; }
+  .btn:active { transform: translateY(1px); }
+  .btn-primary {
+    background: var(--bat); border-color: var(--bat); color: #052e16;
+    font-weight: 600;
+  }
+  .btn-primary:hover { background: var(--bat-dim); border-color: var(--bat-dim); }
+  .btn-bowl {
+    background: var(--bowl); border-color: var(--bowl); color: #431407;
+    font-weight: 600;
+  }
+  .btn-bowl:hover { background: var(--bowl-dim); border-color: var(--bowl-dim); }
+  .btn-danger { color: var(--danger); }
+  .btn-danger:hover { background: rgba(239,68,68,0.1); border-color: var(--danger); }
+  .btn svg { width: 14px; height: 14px; }
+
+  .status-pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 5px 10px; border-radius: 999px;
+    background: var(--surface-2); border: 1px solid var(--border);
+    font-family: 'Geist Mono', monospace; font-size: 11px;
+    color: var(--text-2);
+  }
+  .status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--text-3); }
+  .status-dot.green { background: var(--bat); box-shadow: 0 0 8px var(--bat); }
+  .status-dot.amber { background: var(--warn); }
+  .status-dot.red { background: var(--danger); }
+
+  /* ============ NAV TABS ============ */
+  .tabs {
+    max-width: 1280px; margin: 0 auto;
+    padding: 0 24px;
+    display: flex; gap: 4px;
+    border-bottom: 1px solid var(--border);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .tab {
+    font-family: 'Geist', sans-serif; font-size: 13px; font-weight: 500;
+    padding: 12px 14px; border: none; background: transparent;
+    color: var(--text-3); cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .tab:hover { color: var(--text-2); }
+  .tab.active { color: var(--text); }
+  .tab.active[data-disc="bat"] { border-bottom-color: var(--bat); }
+  .tab.active[data-disc="bowl"] { border-bottom-color: var(--bowl); }
+  .tab.active:not([data-disc]) { border-bottom-color: var(--text-2); }
+
+  /* ============ DISC TOGGLE (Batting/Bowling switcher on Dashboard) ============ */
+  .disc-toggle {
+    display: inline-flex; padding: 4px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 999px;
+  }
+  .disc-toggle button {
+    font-family: 'Geist', sans-serif; font-size: 13px; font-weight: 500;
+    padding: 7px 16px; border: none; background: transparent;
+    color: var(--text-3); cursor: pointer; border-radius: 999px;
+    transition: all 0.15s;
+  }
+  .disc-toggle button:hover { color: var(--text-2); }
+  .disc-toggle button.active[data-disc="bat"] {
+    background: var(--bat-bg); color: var(--bat);
+  }
+  .disc-toggle button.active[data-disc="bowl"] {
+    background: var(--bowl-bg); color: var(--bowl);
+  }
+
+  /* ============ MAIN ============ */
+  main {
+    max-width: 1280px; margin: 0 auto;
+    padding: 28px 24px 80px;
+  }
+  .panel { display: none; }
+  .panel.active { display: block; animation: fade 0.25s ease; }
+  @keyframes fade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+
+  .section-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 24px; gap: 16px; flex-wrap: wrap;
+  }
+  .section-header h2 {
+    font-family: 'Instrument Serif', serif; font-weight: 400;
+    font-size: 34px; letter-spacing: -0.02em;
+  }
+  .section-header h2 em.bat { font-style: italic; color: var(--bat); }
+  .section-header h2 em.bowl { font-style: italic; color: var(--bowl); }
+  .section-header .meta {
+    font-family: 'Geist Mono', monospace; font-size: 12px;
+    color: var(--text-3);
+  }
+
+  /* ============ KPI CARDS ============ */
+  .kpi-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px; margin-bottom: 28px;
+  }
+  .kpi {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 18px 20px;
+    transition: border-color 0.15s;
+  }
+  .kpi:hover { border-color: #3a3a44; }
+  .kpi .label {
+    font-family: 'Geist Mono', monospace; font-size: 10px;
+    text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--text-3);
+  }
+  .kpi .value {
+    font-family: 'Instrument Serif', serif;
+    font-size: 40px; line-height: 1.1; margin-top: 6px;
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+  }
+  .kpi.bat .value { color: var(--text); }
+  .kpi.bowl .value { color: var(--text); }
+  .kpi .sub { font-size: 12px; color: var(--text-2); margin-top: 4px; }
+
+  .dash-grid {
+    display: grid; grid-template-columns: 1.3fr 1fr; gap: 24px;
+  }
+  @media (max-width: 980px) { .dash-grid { grid-template-columns: 1fr; } }
+
+  .card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); overflow: hidden;
+  }
+  .card-header {
+    padding: 16px 20px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px; flex-wrap: wrap;
+  }
+  .card-title {
+    font-family: 'Instrument Serif', serif; font-size: 22px;
+    letter-spacing: -0.01em;
+  }
+  .card-title em.bat { font-style: italic; color: var(--bat); }
+  .card-title em.bowl { font-style: italic; color: var(--bowl); }
+
+  .sort-tabs { display: flex; gap: 2px; background: var(--surface-2); padding: 3px; border-radius: var(--radius-sm); }
+  .sort-tabs button {
+    font-family: 'Geist Mono', monospace; font-size: 11px;
+    padding: 5px 10px; border: none; background: transparent;
+    color: var(--text-3); cursor: pointer; border-radius: 5px;
+    text-transform: uppercase; letter-spacing: 0.05em;
+  }
+  .sort-tabs button:hover { color: var(--text-2); }
+  .sort-tabs button.active { background: var(--surface-3); color: var(--text); }
+
+  /* ============ LEADERBOARD ============ */
+  .lb-row {
+    display: grid;
+    grid-template-columns: 36px 1fr auto auto;
+    gap: 14px; align-items: center;
+    padding: 12px 20px; border-bottom: 1px solid var(--border-soft);
+    cursor: pointer; transition: background 0.12s;
+  }
+  .lb-row:last-child { border-bottom: none; }
+  .lb-row:hover { background: var(--surface-2); }
+  .lb-rank {
+    font-family: 'Geist Mono', monospace; font-size: 13px;
+    color: var(--text-3); font-variant-numeric: tabular-nums;
+  }
+  .lb-row.top-1 .lb-rank.bat { color: var(--bat); font-weight: 600; }
+  .lb-row.top-1 .lb-rank.bowl { color: var(--bowl); font-weight: 600; }
+  .lb-row.top-3 .lb-rank { color: var(--text-2); }
+  .lb-name { font-size: 15px; font-weight: 500; }
+  .lb-meta {
+    font-family: 'Geist Mono', monospace; font-size: 11px;
+    color: var(--text-3); margin-top: 2px;
+  }
+  .lb-stats {
+    font-family: 'Geist Mono', monospace; font-size: 11px;
+    color: var(--text-3); text-align: right;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.4;
+  }
+  .lb-primary {
+    font-family: 'Instrument Serif', serif; font-size: 26px;
+    letter-spacing: -0.01em;
+    font-variant-numeric: tabular-nums;
+    min-width: 60px; text-align: right;
+  }
+
+  /* ============ MATCH CARDS ============ */
+  .matches-col { display: flex; flex-direction: column; gap: 12px; }
+  .match-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 18px 20px;
+    position: relative; transition: all 0.15s;
+  }
+  .match-card.clickable { cursor: pointer; }
+  .match-card.clickable:hover { border-color: var(--bat); }
+  .match-row-1 {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 14px; gap: 8px;
+  }
+  .match-id-pill {
+    font-family: 'Geist Mono', monospace; font-size: 10px;
+    padding: 4px 8px; border-radius: 5px;
+    background: var(--bat-bg); color: var(--bat);
+    text-transform: uppercase; letter-spacing: 0.08em; font-weight: 500;
+  }
+  .match-date {
+    font-family: 'Geist Mono', monospace; font-size: 11px;
+    color: var(--text-3);
+  }
+  .match-opp {
+    font-family: 'Instrument Serif', serif; font-size: 22px;
+    letter-spacing: -0.01em; line-height: 1.2; margin-bottom: 12px;
+  }
+  .match-opp em { font-style: italic; color: var(--text-3); font-size: 14px; margin-right: 6px; }
+  .match-totals {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 0;
+    margin-bottom: 14px;
+    border-top: 1px solid var(--border-soft);
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .match-half { padding: 10px 14px; }
+  .match-half + .match-half { border-left: 1px solid var(--border-soft); }
+  .match-half .lbl {
+    font-family: 'Geist Mono', monospace; font-size: 9px;
+    color: var(--text-3); text-transform: uppercase; letter-spacing: 0.1em;
+  }
+  .match-half .val {
+    font-family: 'Instrument Serif', serif; font-size: 24px;
+    letter-spacing: -0.02em; font-variant-numeric: tabular-nums;
+    margin-top: 2px;
+  }
+  .match-half.bat .val { color: var(--text); }
+  .match-half.bowl .val { color: var(--text); }
+  .match-half .sub {
+    font-family: 'Geist Mono', monospace; font-size: 10px;
+    color: var(--text-3); margin-top: 2px;
+  }
+  .top-perf-section { margin-top: 12px; }
+  .top-perf-section + .top-perf-section { margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--border-soft); }
+  .top-perf-label {
+    font-family: 'Geist Mono', monospace; font-size: 9px;
+    text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--text-3); margin-bottom: 6px;
+  }
+  .top-perf-label.bat { color: var(--bat); }
+  .top-perf-label.bowl { color: var(--bowl); }
+  .top-perf-row { display: flex; flex-direction: column; gap: 3px; font-size: 13px; }
+  .top-perf-row .perf strong { color: var(--text); font-weight: 600; }
+  .top-perf-row .perf .runs { color: var(--bat); font-weight: 600; }
+  .top-perf-row .perf .wkts { color: var(--bowl); font-weight: 600; }
+
+  /* ============ PLAYER GRID ============ */
+  .filter-row {
+    display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap;
+  }
+  .chip {
+    padding: 6px 12px; border-radius: 999px;
+    border: 1px solid var(--border); background: var(--surface);
+    color: var(--text-2); font-size: 12px; cursor: pointer;
+    transition: all 0.15s;
+  }
+  .chip:hover { color: var(--text); border-color: #3a3a44; }
+  .chip.active.bat { background: var(--bat-bg); color: var(--bat); border-color: var(--bat); }
+  .chip.active.bowl { background: var(--bowl-bg); color: var(--bowl); border-color: var(--bowl); }
+
+  .player-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 14px;
+  }
+  .player-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 20px;
+    cursor: pointer; transition: all 0.15s;
+  }
+  .player-card:hover {
+    border-color: var(--bat);
+    transform: translateY(-2px);
+  }
+  .player-pos-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 4px; }
+  .player-pos {
+    font-family: 'Geist Mono', monospace; font-size: 10px;
+    text-transform: uppercase; letter-spacing: 0.1em;
+    padding: 2px 8px; border-radius: 4px;
+  }
+  .player-pos.bat { color: var(--bat); background: var(--bat-bg); }
+  .player-pos.bowl { color: var(--bowl); background: var(--bowl-bg); }
+  .player-name {
+    font-family: 'Instrument Serif', serif; font-size: 26px;
+    letter-spacing: -0.02em; margin: 6px 0 14px;
+  }
+  .player-stats-section {
+    padding-top: 12px; border-top: 1px solid var(--border-soft);
+  }
+  .player-stats-section + .player-stats-section { margin-top: 10px; }
+  .player-stats-header {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 6px;
+  }
+  .player-stats-header .lbl {
+    font-family: 'Geist Mono', monospace; font-size: 9px;
+    text-transform: uppercase; letter-spacing: 0.1em;
+  }
+  .player-stats-header .lbl.bat { color: var(--bat); }
+  .player-stats-header .lbl.bowl { color: var(--bowl); }
+  .player-stats-header .count {
+    font-family: 'Geist Mono', monospace; font-size: 10px;
+    color: var(--text-3);
+  }
+  .player-stats-row {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+  .player-stat .pl {
+    font-family: 'Geist Mono', monospace; font-size: 9px;
+    color: var(--text-3); text-transform: uppercase; letter-spacing: 0.1em;
+  }
+  .player-stat .pv {
+    font-family: 'Instrument Serif', serif; font-size: 20px;
+    letter-spacing: -0.01em; margin-top: 2px;
+    font-variant-numeric: tabular-nums;
+  }
+  .player-empty {
+    color: var(--text-3); font-size: 13px; padding: 4px 0;
+  }
+
+  /* ============ FORM ============ */
+  .edit-mode-tabs {
+    display: inline-flex; padding: 4px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 999px; margin-bottom: 20px;
+  }
+  .edit-mode-tabs button {
+    font-family: 'Geist', sans-serif; font-size: 13px; font-weight: 500;
+    padding: 7px 16px; border: none; background: transparent;
+    color: var(--text-3); cursor: pointer; border-radius: 999px;
+  }
+  .edit-mode-tabs button.active[data-disc="bat"] { background: var(--bat-bg); color: var(--bat); }
+  .edit-mode-tabs button.active[data-disc="bowl"] { background: var(--bowl-bg); color: var(--bowl); }
+
+  .form-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 24px;
+    max-width: 900px;
+  }
+  .form-row {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+    margin-bottom: 16px;
+  }
+  @media (max-width: 640px) { .form-row { grid-template-columns: 1fr; } }
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field label {
+    font-family: 'Geist Mono', monospace; font-size: 10px;
+    color: var(--text-3); text-transform: uppercase; letter-spacing: 0.1em;
+  }
+  .field input, .field select {
+    font-family: 'Geist', sans-serif; font-size: 14px;
+    padding: 10px 12px; border: 1px solid var(--border);
+    background: var(--surface-2); color: var(--text); border-radius: var(--radius-sm);
+    transition: border-color 0.15s;
+  }
+  .field input:focus, .field select:focus {
+    outline: none; border-color: var(--bat);
+    box-shadow: 0 0 0 3px var(--bat-bg);
+  }
+  body .form-card.bowl-mode .field input:focus,
+  body .form-card.bowl-mode .field select:focus {
+    border-color: var(--bowl);
+    box-shadow: 0 0 0 3px var(--bowl-bg);
+  }
+
+  .scores-table {
+    margin-top: 8px; border: 1px solid var(--border);
+    border-radius: var(--radius-sm); overflow: hidden;
+    background: var(--surface-2);
+  }
+  .st-head, .st-row {
+    display: grid;
+    grid-template-columns: 1fr 80px 80px 70px 36px;
+    gap: 10px; padding: 9px 14px; align-items: center;
+  }
+  .form-card.bowl-mode .st-head,
+  .form-card.bowl-mode .st-row {
+    grid-template-columns: 1fr 80px 80px 80px 36px;
+  }
+  .st-head {
+    background: var(--surface-3);
+    font-family: 'Geist Mono', monospace; font-size: 10px;
+    text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-3);
+  }
+  .st-row { border-bottom: 1px solid var(--border-soft); }
+  .st-row:last-child { border-bottom: none; }
+  .st-row .pn { font-size: 14px; font-weight: 500; }
+  .st-row .pn .g {
+    font-family: 'Geist Mono', monospace; font-size: 9px;
+    color: var(--text-3); text-transform: uppercase; letter-spacing: 0.1em;
+    display: block; font-weight: 400; margin-top: 2px;
+  }
+  .st-row input[type=number] {
+    font-family: 'Geist Mono', monospace; font-size: 13px;
+    padding: 6px 8px; border: 1px solid var(--border);
+    background: var(--bg); color: var(--text); border-radius: 5px;
+    width: 100%; text-align: center;
+  }
+  .st-row input[type=number]:focus {
+    outline: none; border-color: var(--bat);
+  }
+  .form-card.bowl-mode .st-row input[type=number]:focus { border-color: var(--bowl); }
+  .st-row input[type=checkbox] {
+    width: 18px; height: 18px; cursor: pointer; accent-color: var(--bat);
+  }
+  .st-row .del-btn {
+    background: transparent; border: none; color: var(--text-3);
+    cursor: pointer; padding: 4px; border-radius: 4px;
+  }
+  .st-row .del-btn:hover { color: var(--danger); background: rgba(239,68,68,0.1); }
+  .scores-empty-hint {
+    padding: 14px; text-align: center; color: var(--text-3); font-size: 13px;
+  }
+
+  .form-actions {
+    display: flex; gap: 10px; margin-top: 24px;
+    padding-top: 20px; border-top: 1px solid var(--border);
+    justify-content: flex-end; flex-wrap: wrap;
+  }
+  .small-add-btn { margin-top: 10px; font-size: 12px; }
+
+  /* ============ MODAL ============ */
+  .modal-bg {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    z-index: 100;
+    align-items: center; justify-content: center; padding: 16px;
+  }
+  .modal-bg.open { display: flex; animation: fade 0.2s; }
+  .modal {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius);
+    max-width: 640px; width: 100%; max-height: 90vh; overflow-y: auto;
+    box-shadow: var(--shadow);
+  }
+  .modal-header {
+    padding: 24px 24px 20px; border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+  .modal-close {
+    position: absolute; top: 16px; right: 16px;
+    width: 32px; height: 32px; border-radius: 8px;
+    border: 1px solid var(--border); background: var(--surface-2);
+    color: var(--text-2); font-size: 18px; line-height: 1; cursor: pointer;
+  }
+  .modal-close:hover { background: var(--surface-3); color: var(--text); }
+  .modal-roles { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
+  .modal-role {
+    font-family: 'Geist Mono', monospace; font-size: 10px;
+    text-transform: uppercase; letter-spacing: 0.1em;
+    padding: 2px 8px; border-radius: 4px;
+  }
+  .modal-role.bat { color: var(--bat); background: var(--bat-bg); }
+  .modal-role.bowl { color: var(--bowl); background: var(--bowl-bg); }
+  .modal-name {
+    font-family: 'Instrument Serif', serif; font-size: 36px;
+    letter-spacing: -0.02em;
+  }
+  .modal-body { padding: 20px 24px 24px; }
+  .modal-section { margin-top: 16px; }
+  .modal-section:first-child { margin-top: 0; }
+  .modal-section-head {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 10px;
+  }
+  .modal-section-head h4 {
+    font-family: 'Geist Mono', monospace; font-size: 11px;
+    text-transform: uppercase; letter-spacing: 0.1em;
+  }
+  .modal-section-head h4.bat { color: var(--bat); }
+  .modal-section-head h4.bowl { color: var(--bowl); }
+  .modal-kpis {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 10px; margin-bottom: 12px;
+  }
+  @media (max-width: 500px) { .modal-kpis { grid-template-columns: repeat(2, 1fr); } }
+  .modal-kpi {
+    background: var(--surface-2); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 12px;
+  }
+  .modal-kpi .l {
+    font-family: 'Geist Mono', monospace; font-size: 9px;
+    color: var(--text-3); text-transform: uppercase; letter-spacing: 0.1em;
+  }
+  .modal-kpi .v {
+    font-family: 'Instrument Serif', serif; font-size: 24px;
+    margin-top: 4px; font-variant-numeric: tabular-nums;
+  }
+  .log-row {
+    display: grid; grid-template-columns: 50px 1fr auto auto;
+    gap: 12px; align-items: baseline;
+    padding: 10px 0; border-bottom: 1px solid var(--border-soft);
+  }
+  .log-row:last-child { border-bottom: none; }
+  .log-row .m {
+    font-family: 'Geist Mono', monospace; font-size: 11px;
+    font-weight: 500;
+  }
+  .log-row .m.bat { color: var(--bat); }
+  .log-row .m.bowl { color: var(--bowl); }
+  .log-row .opp { font-size: 14px; color: var(--text-2); }
+  .log-row .score {
+    font-family: 'Instrument Serif', serif; font-size: 20px;
+    font-variant-numeric: tabular-nums;
+  }
+  .log-row .score.no { color: var(--bat); }
+  .log-row .extra {
+    font-family: 'Geist Mono', monospace; font-size: 11px;
+    color: var(--text-3); min-width: 64px; text-align: right;
+  }
+  .modal-empty {
+    color: var(--text-3); font-size: 13px; padding: 8px 0;
+  }
+
+  /* ============ CONNECT / ADD PLAYER MODALS ============ */
+  .connect-card { max-width: 560px; padding: 28px; line-height: 1.6; }
+  .connect-card h3 {
+    font-family: 'Instrument Serif', serif; font-size: 26px;
+    margin-bottom: 6px; letter-spacing: -0.01em;
+  }
+  .connect-card .lead { color: var(--text-2); margin-bottom: 20px; font-size: 14px; }
+  .step {
+    background: var(--surface-2); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 14px 16px;
+    margin-bottom: 10px;
+  }
+  .step-n {
+    font-family: 'Geist Mono', monospace; font-size: 10px;
+    color: var(--bat); text-transform: uppercase; letter-spacing: 0.1em;
+    margin-bottom: 4px;
+  }
+  .step a { color: var(--bat); text-decoration: none; }
+  .step a:hover { text-decoration: underline; }
+  code {
+    font-family: 'Geist Mono', monospace; font-size: 12px;
+    background: var(--bg); padding: 2px 6px; border-radius: 4px;
+    color: var(--bat); border: 1px solid var(--border);
+  }
+  .player-type-toggle {
+    display: flex; gap: 6px; margin-top: 6px;
+  }
+  .player-type-toggle label {
+    display: flex; align-items: center; gap: 6px;
+    padding: 8px 12px; border: 1px solid var(--border);
+    background: var(--surface-2); border-radius: var(--radius-sm);
+    cursor: pointer; font-size: 13px; flex: 1;
+  }
+  .player-type-toggle label:has(input:checked) {
+    border-color: var(--bat); background: var(--bat-bg);
+  }
+
+  /* ============ TOAST ============ */
+  .toast {
+    position: fixed; bottom: 24px; left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--surface-2); border: 1px solid var(--border);
+    color: var(--text); padding: 12px 18px; border-radius: var(--radius-sm);
+    font-size: 13px; box-shadow: var(--shadow);
+    opacity: 0; pointer-events: none; transition: all 0.25s; z-index: 200;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  .toast .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--bat); }
+  .toast.err .dot { background: var(--danger); }
+
+  /* ============ EMPTY ============ */
+  .empty {
+    padding: 60px 24px; text-align: center; color: var(--text-3);
+  }
+  .empty h3 {
+    font-family: 'Instrument Serif', serif; font-size: 26px;
+    color: var(--text); margin-bottom: 8px;
+  }
+
+  /* ============ HELP ============ */
+  .help-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+  }
+  .help-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 22px;
+  }
+  .help-card h3 {
+    font-family: 'Instrument Serif', serif; font-size: 22px;
+    margin-bottom: 10px; letter-spacing: -0.01em;
+  }
+  .help-card p { color: var(--text-2); margin-bottom: 10px; font-size: 14px; }
+  .help-card ol, .help-card ul { margin: 8px 0 12px 20px; color: var(--text-2); font-size: 14px; }
+  .help-card li { margin-bottom: 6px; }
+
+  .unsaved-badge {
+    background: rgba(245,158,11,0.15); color: var(--warn);
+    border: 1px solid rgba(245,158,11,0.3);
+    padding: 4px 10px; border-radius: 999px; font-size: 11px;
+    font-family: 'Geist Mono', monospace; display: none;
+  }
+  .unsaved-badge.show { display: inline-flex; align-items: center; gap: 6px; }
+  .unsaved-badge::before {
+    content: ""; width: 6px; height: 6px; border-radius: 50%;
+    background: var(--warn); animation: pulse 1.5s infinite;
+  }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+  body:not(.editor) .editor-only { display: none !important; }
+
+  @media (max-width: 600px) {
+    main { padding: 20px 16px 60px; }
+    .header-inner, .tabs { padding-left: 16px; padding-right: 16px; }
+    .section-header h2 { font-size: 28px; }
+    .kpi .value { font-size: 32px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="brand">
+      <div class="brand-mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M5 19l3 3"/>
+          <path d="M16.5 4.5l3 3-11 11-3-3z"/>
+          <circle cx="5.5" cy="18.5" r="1.5" fill="currentColor"/>
+        </svg>
+      </div>
+      <div class="brand-text">
+        <div class="brand-name">Legions Div&nbsp;C</div>
+        <div class="brand-sub">Cricket Stats</div>
+      </div>
+    </div>
+    <div class="header-actions">
+      <span class="status-pill" id="syncPill">
+        <span class="status-dot"></span>
+        <span id="syncText">Loading…</span>
+      </span>
+      <span class="unsaved-badge" id="unsavedBadge">unsaved changes</span>
+      <button class="btn editor-only" id="saveBtn" onclick="saveToGitHub()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+        Save
+      </button>
+      <button class="btn" id="connectBtn" onclick="openConnect()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+        <span id="connectBtnText">Connect</span>
+      </button>
+    </div>
+  </div>
+  <nav class="tabs">
+    <button class="tab active" data-tab="dash" onclick="switchTab('dash')">Dashboard</button>
+    <button class="tab" data-tab="batting" data-disc="bat" onclick="switchTab('batting')">Batting</button>
+    <button class="tab" data-tab="bowling" data-disc="bowl" onclick="switchTab('bowling')">Bowling</button>
+    <button class="tab" data-tab="matches" onclick="switchTab('matches')">Matches</button>
+    <button class="tab editor-only" data-tab="edit" onclick="switchTab('edit')">+ Add / Edit</button>
+    <button class="tab" data-tab="help" onclick="switchTab('help')">Setup</button>
+  </nav>
+</header>
+
+<main>
+
+  <!-- DASHBOARD -->
+  <section class="panel active" id="panel-dash">
+    <div class="section-header">
+      <h2>The <em class="bat" id="dashAccent">Almanack</em></h2>
+      <div class="disc-toggle" id="dashDisc">
+        <button class="active" data-disc="bat" onclick="setDashDisc('bat')">Batting</button>
+        <button data-disc="bowl" onclick="setDashDisc('bowl')">Bowling</button>
+      </div>
+    </div>
+    <div class="kpi-grid" id="kpiGrid"></div>
+    <div class="dash-grid">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title" id="leaderTitle">Top <em class="bat">Batters</em></div>
+          <div class="sort-tabs" id="sortTabs"></div>
+        </div>
+        <div id="leaderboardBody"></div>
+      </div>
+      <div>
+        <div class="card-header" style="background:transparent;border:none;padding:0 4px 12px">
+          <div class="card-title">Recent <em class="bat">Matches</em></div>
+        </div>
+        <div class="matches-col" id="matchesCol"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BATTING -->
+  <section class="panel" id="panel-batting">
+    <div class="section-header">
+      <h2>The <em class="bat">Batters</em></h2>
+      <div class="meta">Tap any card for the full innings log</div>
+    </div>
+    <div class="filter-row" id="battingFilters"></div>
+    <div class="player-grid" id="battingGrid"></div>
+  </section>
+
+  <!-- BOWLING -->
+  <section class="panel" id="panel-bowling">
+    <div class="section-header">
+      <h2>The <em class="bowl">Bowlers</em></h2>
+      <div class="meta">Tap any card for the full bowling log</div>
+    </div>
+    <div class="filter-row" id="bowlingFilters"></div>
+    <div class="player-grid" id="bowlingGrid"></div>
+  </section>
+
+  <!-- MATCHES -->
+  <section class="panel" id="panel-matches">
+    <div class="section-header">
+      <h2>Match <em>Ledger</em></h2>
+      <div class="meta editor-only">Tap any match to edit</div>
+    </div>
+    <div class="player-grid" id="matchGrid"></div>
+  </section>
+
+  <!-- EDIT (editor-only) -->
+  <section class="panel editor-only" id="panel-edit">
+    <div class="section-header">
+      <h2>Record a <em class="bat" id="editAccent">Match</em></h2>
+      <div class="meta">Changes save to GitHub when you press Save</div>
+    </div>
+    <div class="edit-mode-tabs" id="editModeTabs">
+      <button class="active" data-disc="bat" onclick="setEditMode('bat')">Batting</button>
+      <button data-disc="bowl" onclick="setEditMode('bowl')">Bowling</button>
+    </div>
+    <div class="form-card" id="formCard">
+      <div class="form-row">
+        <div class="field">
+          <label>Match</label>
+          <select id="matchSelect" onchange="onMatchSelectChange()"></select>
+        </div>
+        <div class="field">
+          <label>Match ID</label>
+          <input type="text" id="matchId" placeholder="M6" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="field">
+          <label>Opponent</label>
+          <input type="text" id="matchOpp" placeholder="Brooklyn Strikers" />
+        </div>
+        <div class="field">
+          <label>Date</label>
+          <input type="date" id="matchDate" />
+        </div>
+      </div>
+
+      <label style="font-family:'Geist Mono',monospace;font-size:10px;color:var(--text-3);text-transform:uppercase;letter-spacing:0.1em;display:block;margin-top:14px;margin-bottom:6px" id="scoresLabel">
+        Batting scorecard · leave blank if the player did not bat
+      </label>
+      <div class="scores-table">
+        <div class="st-head" id="scoresHead"></div>
+        <div id="scoresBody"></div>
+      </div>
+      <button class="btn small-add-btn" onclick="openAddPlayer()">+ Add new player to roster</button>
+
+      <div class="form-actions">
+        <button class="btn btn-danger" onclick="deleteCurrentMatch()" id="deleteBtn" style="display:none">Delete match</button>
+        <button class="btn" onclick="resetForm()">Clear</button>
+        <button class="btn btn-primary" onclick="saveMatch()" id="saveMatchBtn">Save match</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- HELP -->
+  <section class="panel" id="panel-help">
+    <div class="section-header">
+      <h2>Setup &amp; <em class="bat">Hosting</em></h2>
+      <div class="meta">A 10-minute, one-time setup</div>
+    </div>
+    <div class="help-grid">
+      <div class="help-card">
+        <h3>1. Create the repo</h3>
+        <p>Sign in to <a href="https://github.com" target="_blank" style="color:var(--bat)">GitHub</a> (free) and create a new <strong>public</strong> repository — name it anything, e.g. <code>legions-stats</code>.</p>
+        <p>Upload two files to the root:</p>
+        <ul>
+          <li><code>index.html</code> — this file</li>
+          <li><code>data.json</code> — your stats data</li>
+        </ul>
+      </div>
+      <div class="help-card">
+        <h3>2. Enable GitHub Pages</h3>
+        <p>In the repo, go to <strong>Settings → Pages</strong>. Under "Build and deployment", set:</p>
+        <ul>
+          <li>Source: <code>Deploy from branch</code></li>
+          <li>Branch: <code>main</code> · <code>/ (root)</code></li>
+        </ul>
+        <p>Save. After ~1 minute your site is live at <code>https://&lt;username&gt;.github.io/&lt;repo&gt;/</code></p>
+      </div>
+      <div class="help-card">
+        <h3>3. Get an edit token</h3>
+        <p>Go to <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" style="color:var(--bat)">github.com/settings/personal-access-tokens/new</a>.</p>
+        <ul>
+          <li>Resource owner: your username</li>
+          <li>Repository access: only your stats repo</li>
+          <li>Permissions → Contents: <strong>Read &amp; write</strong></li>
+        </ul>
+        <p>Copy the token (starts with <code>github_pat_</code>).</p>
+      </div>
+      <div class="help-card">
+        <h3>4. Connect &amp; edit</h3>
+        <p>Open your live site, click <strong>Connect</strong>, paste the token plus your username and repo name. The token stays in your browser (localStorage) only.</p>
+        <p>Once connected, <strong>+ Add / Edit</strong> appears in the nav. Toggle between <em style="color:var(--bat)">Batting</em> and <em style="color:var(--bowl)">Bowling</em> at the top of the form to record either kind of stat for each match.</p>
+      </div>
+      <div class="help-card">
+        <h3>How bowling stats work</h3>
+        <p>For each bowler in a match, enter <strong>Overs</strong>, <strong>Runs conceded</strong>, and <strong>Wickets</strong>. The site computes the bowling average, economy, and strike rate automatically.</p>
+        <p>Decimal overs are supported (e.g. <code>3.4</code> means 3 overs and 4 balls).</p>
+      </div>
+      <div class="help-card">
+        <h3>Tips</h3>
+        <p>The leaderboards on the dashboard switch between <em style="color:var(--bat)">Batting</em> and <em style="color:var(--bowl)">Bowling</em> with the toggle at the top. Each player card and modal shows both kinds of stats side-by-side.</p>
+        <p>When adding a new player, you can pick whether they're a batter, a bowler, or both — they'll only appear in the relevant leaderboards.</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- PLAYER MODAL -->
+<div class="modal-bg" id="modalBg" onclick="closeModalIfBg(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <button class="modal-close" onclick="closeModal()">×</button>
+      <div class="modal-roles" id="modalRoles"></div>
+      <div class="modal-name" id="modalName"></div>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<!-- CONNECT MODAL -->
+<div class="modal-bg" id="connectBg" onclick="closeConnectIfBg(event)">
+  <div class="modal connect-card">
+    <button class="modal-close" onclick="closeConnect()">×</button>
+    <h3>Connect to <em style="font-style:italic;color:var(--bat)">GitHub</em></h3>
+    <p class="lead">Save edits directly to your repo. Token is stored only in this browser.</p>
+    <div class="step">
+      <div class="step-n">Step 1</div>
+      Get a fine-grained PAT at <a href="https://github.com/settings/personal-access-tokens/new" target="_blank">github.com/settings/personal-access-tokens/new</a> with <strong>Contents: Read &amp; write</strong> on your stats repo.
+    </div>
+    <div style="margin-top:16px">
+      <div class="form-row">
+        <div class="field">
+          <label>GitHub username</label>
+          <input type="text" id="ghOwner" placeholder="your-username" />
+        </div>
+        <div class="field">
+          <label>Repository name</label>
+          <input type="text" id="ghRepo" placeholder="legions-stats" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="field">
+          <label>Branch</label>
+          <input type="text" id="ghBranch" placeholder="main" value="main" />
+        </div>
+        <div class="field">
+          <label>Data file path</label>
+          <input type="text" id="ghPath" value="data.json" />
+        </div>
+      </div>
+      <div class="field" style="margin-bottom:16px">
+        <label>Personal access token</label>
+        <input type="password" id="ghToken" placeholder="github_pat_…" />
+      </div>
+      <div class="form-actions" style="border:none;padding:0;margin:0">
+        <button class="btn btn-danger" onclick="disconnect()" id="disconnectBtn" style="display:none">Disconnect</button>
+        <button class="btn" onclick="closeConnect()">Cancel</button>
+        <button class="btn btn-primary" onclick="connect()">Connect &amp; verify</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ADD PLAYER MODAL -->
+<div class="modal-bg" id="addPlayerBg" onclick="closeAddPlayerIfBg(event)">
+  <div class="modal connect-card">
+    <button class="modal-close" onclick="closeAddPlayer()">×</button>
+    <h3>Add new <em style="color:var(--bat)">player</em></h3>
+    <p class="lead">Add the player to the roster.</p>
+    <div class="field" style="margin-bottom:14px">
+      <label>Name</label>
+      <input type="text" id="newPlayerName" placeholder="e.g. Vivek" />
+    </div>
+    <div class="field" style="margin-bottom:14px">
+      <label>Role</label>
+      <div class="player-type-toggle">
+        <label><input type="checkbox" id="newPlayerBat" checked /> Batter</label>
+        <label><input type="checkbox" id="newPlayerBowl" /> Bowler</label>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="field">
+        <label>Batting position</label>
+        <select id="newPlayerGroup">
+          <option value="">— none —</option>
+          <option>Openers</option>
+          <option>Middle Order</option>
+          <option>Finisher</option>
+          <option>Tailender</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Bowling type</label>
+        <select id="newPlayerBowlGroup">
+          <option value="">— none —</option>
+          <option>Pacers</option>
+          <option>Spinners</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-actions" style="border:none;padding:0;margin-top:14px">
+      <button class="btn" onclick="closeAddPlayer()">Cancel</button>
+      <button class="btn btn-primary" onclick="addPlayer()">Add to roster</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><span class="dot"></span><span id="toastMsg"></span></div>
+
+<script>
+/* ============ FALLBACK EMBEDDED DATA ============ */
+const FALLBACK_DATA = {"team": "Legions Div C", "matches": [{"id": "M1", "opponent": "", "date": ""}, {"id": "M3", "opponent": "Jersey Titans Cricket Club", "date": ""}, {"id": "M4", "opponent": "Dreamcricket Panthers", "date": ""}, {"id": "M5", "opponent": "Indus Jr", "date": ""}], "players": [{"name": "Anuj", "group": "Openers", "scores": {"M3": {"runs": 3, "balls": 4, "notOut": false}, "M4": {"runs": 6, "balls": 10, "notOut": false}, "M5": {"runs": 2, "balls": 17, "notOut": false}}, "bowling": {"M3": {"overs": 4.0, "runs": 7, "wickets": 1}, "M4": {"overs": 2.0, "runs": 16, "wickets": 1}, "M5": {"overs": 1.0, "runs": 11, "wickets": 0}}, "bowlGroup": "Spinners"}, {"name": "Sid", "group": "Openers", "scores": {"M3": {"runs": 11, "balls": 20, "notOut": false}, "M5": {"runs": 0, "balls": 3, "notOut": false}}, "bowling": {}, "bowlGroup": ""}, {"name": "Aakash", "group": "Openers", "scores": {"M4": {"runs": 0, "balls": 2, "notOut": false}}, "bowling": {}, "bowlGroup": ""}, {"name": "GT", "group": "Openers", "scores": {"M5": {"runs": 22, "balls": 16, "notOut": false}}, "bowling": {}, "bowlGroup": ""}, {"name": "Harsh", "group": "Openers", "scores": {}, "bowling": {}, "bowlGroup": ""}, {"name": "Virat", "group": "Middle Order", "scores": {"M3": {"runs": 27, "balls": 32, "notOut": false}, "M4": {"runs": 15, "balls": 42, "notOut": false}, "M5": {"runs": 9, "balls": 28, "notOut": false}}, "bowling": {"M3": {"overs": 3.0, "runs": 7, "wickets": 2}, "M4": {"overs": 3.0, "runs": 20, "wickets": 1}, "M5": {"overs": 5.0, "runs": 18, "wickets": 1}}, "bowlGroup": "Pacers"}, {"name": "Jaemeel", "group": "Middle Order", "scores": {"M4": {"runs": 16, "balls": 36, "notOut": false}, "M5": {"runs": 27, "balls": 70, "notOut": false}}, "bowling": {"M5": {"overs": 1.0, "runs": 6, "wickets": 0}}, "bowlGroup": "Pacers"}, {"name": "Raghav", "group": "Middle Order", "scores": {"M3": {"runs": 37, "balls": 37, "notOut": false}, "M4": {"runs": 1, "balls": 10, "notOut": false}, "M5": {"runs": 14, "balls": 27, "notOut": false}}, "bowling": {"M3": {"overs": 5.0, "runs": 4, "wickets": 0}, "M4": {"overs": 3.4, "runs": 9, "wickets": 0}, "M5": {"overs": 8.0, "runs": 19, "wickets": 1}}, "bowlGroup": "Spinners"}, {"name": "Ajay", "group": "Middle Order", "scores": {"M3": {"runs": 12, "balls": 15, "notOut": false}}, "bowling": {}, "bowlGroup": ""}, {"name": "Sugin", "group": "Middle Order", "scores": {"M3": {"runs": 12, "balls": 19, "notOut": false}}, "bowling": {}, "bowlGroup": ""}, {"name": "Naineet", "group": "Middle Order", "scores": {"M5": {"runs": 2, "balls": 4, "notOut": false}}, "bowling": {"M5": {"overs": 2.0, "runs": 14, "wickets": 0}}, "bowlGroup": "Pacers"}, {"name": "Mujtaba", "group": "Finisher", "scores": {"M3": {"runs": 4, "balls": 4, "notOut": false}, "M4": {"runs": 4, "balls": 12, "notOut": false}}, "bowling": {}, "bowlGroup": ""}, {"name": "AJ", "group": "Finisher", "scores": {"M3": {"runs": 4, "balls": 15, "notOut": false}, "M4": {"runs": 0, "balls": 2, "notOut": false}}, "bowling": {"M1": {"overs": 3.0, "runs": 16, "wickets": 0}, "M3": {"overs": 4.0, "runs": 15, "wickets": 2}}, "bowlGroup": "Spinners"}, {"name": "Kannan", "group": "Finisher", "scores": {"M3": {"runs": 6, "balls": 8, "notOut": true}, "M4": {"runs": 1, "balls": 2, "notOut": false}, "M5": {"runs": 2, "balls": 7, "notOut": false}}, "bowling": {"M3": {"overs": 4.0, "runs": 7, "wickets": 1}, "M4": {"overs": 2.0, "runs": 16, "wickets": 1}, "M5": {"overs": 3.0, "runs": 18, "wickets": 0}}, "bowlGroup": "Pacers"}, {"name": "Yuvraj", "group": "Tailender", "scores": {"M4": {"runs": 2, "balls": 12, "notOut": false}}, "bowling": {"M1": {"overs": 2.0, "runs": 17, "wickets": 0}}, "bowlGroup": "Spinners"}, {"name": "Daswanth", "group": "Tailender", "scores": {"M3": {"runs": 0, "balls": 1, "notOut": false}, "M4": {"runs": 0, "balls": 1, "notOut": false}, "M5": {"runs": 2, "balls": 5, "notOut": false}}, "bowling": {"M3": {"overs": 1.0, "runs": 2, "wickets": 2}, "M4": {"overs": 1.0, "runs": 2, "wickets": 0}, "M5": {"overs": 4.2, "runs": 21, "wickets": 1}}, "bowlGroup": "Spinners"}, {"name": "Sobin", "group": "Tailender", "scores": {"M3": {"runs": 1, "balls": 3, "notOut": false}}, "bowling": {"M3": {"overs": 4.0, "runs": 16, "wickets": 1}}, "bowlGroup": "Pacers"}, {"name": "Ravi", "group": "Tailender", "scores": {"M4": {"runs": 2, "balls": 14, "notOut": false}, "M5": {"runs": 4, "balls": 17, "notOut": false}}, "bowling": {}, "bowlGroup": ""}, {"name": "Punit", "group": "Tailender", "scores": {"M5": {"runs": 1, "balls": 2, "notOut": false}}, "bowling": {}, "bowlGroup": ""}, {"name": "Basiil", "group": "", "scores": {}, "bowling": {"M1": {"overs": 4.0, "runs": 19, "wickets": 1}}, "bowlGroup": "Spinners"}, {"name": "KA", "group": "", "scores": {}, "bowling": {"M1": {"overs": 6.0, "runs": 29, "wickets": 4}}, "bowlGroup": "Spinners"}, {"name": "Aravind M", "group": "", "scores": {}, "bowling": {"M1": {"overs": 6.0, "runs": 18, "wickets": 2}}, "bowlGroup": "Spinners"}]};
+
+let DATA = JSON.parse(JSON.stringify(FALLBACK_DATA));
+let currentSort = 'runs';     // valid for bat: runs|avg|sr|hs ; bowl: wickets|eco|avg|sr
+let dashDisc = 'bat';          // 'bat' or 'bowl' on the dashboard
+let editMode = 'bat';          // 'bat' or 'bowl' in the edit form
+let battingFilter = 'All';
+let bowlingFilter = 'All';
+let dataSHA = null;
+let unsaved = false;
+
+const GH = {
+  get owner() { return localStorage.getItem('gh_owner') || ''; },
+  get repo()  { return localStorage.getItem('gh_repo')  || ''; },
+  get branch(){ return localStorage.getItem('gh_branch')|| 'main'; },
+  get path()  { return localStorage.getItem('gh_path')  || 'data.json'; },
+  get token() { return localStorage.getItem('gh_token') || ''; },
+  isConfigured() { return !!(this.owner && this.repo && this.token); },
+};
+
+/* ============ STATS ============ */
+// Cricket overs: 3.4 = 3 overs + 4 balls. So total balls = floor*6 + decimal*10 (decimal must be 0..5)
+function oversToBalls(overs) {
+  if (overs == null) return 0;
+  const o = Math.floor(overs);
+  const b = Math.round((overs - o) * 10);
+  return o * 6 + b;
+}
+function ballsToOvers(balls) {
+  const o = Math.floor(balls / 6);
+  const b = balls % 6;
+  return o + b / 10;
+}
+function fmtOvers(overs) {
+  const balls = oversToBalls(overs);
+  const o = Math.floor(balls / 6);
+  const b = balls % 6;
+  return b === 0 ? String(o) : (o + '.' + b);
+}
+
+function battingStats(p) {
+  const innings = Object.values(p.scores || {});
+  const matches = innings.length;
+  const runs = innings.reduce((s, i) => s + (i.runs || 0), 0);
+  const balls = innings.reduce((s, i) => s + (i.balls || 0), 0);
+  const outs = innings.filter(i => !i.notOut).length;
+  const hs = innings.reduce((m, i) => i.runs > m ? i.runs : m, 0);
+  const avg = outs > 0 ? runs / outs : (runs > 0 ? runs : 0);
+  const sr = balls > 0 ? (runs / balls) * 100 : 0;
+  return { matches, runs, balls, outs, hs, avg, sr, hasInnings: matches > 0 };
+}
+
+function bowlingStats(p) {
+  const inns = Object.values(p.bowling || {});
+  const matches = inns.length;
+  const totalBalls = inns.reduce((s, i) => s + oversToBalls(i.overs || 0), 0);
+  const runs = inns.reduce((s, i) => s + (i.runs || 0), 0);
+  const wickets = inns.reduce((s, i) => s + (i.wickets || 0), 0);
+  const overs = ballsToOvers(totalBalls);
+  const eco = totalBalls > 0 ? (runs / (totalBalls / 6)) : 0;
+  const avg = wickets > 0 ? runs / wickets : 0;
+  const sr = wickets > 0 ? totalBalls / wickets : 0; // balls per wicket
+  const best = inns.reduce((b, i) => {
+    if (!b || i.wickets > b.wickets || (i.wickets === b.wickets && i.runs < b.runs)) return i;
+    return b;
+  }, null);
+  return { matches, overs, totalBalls, runs, wickets, eco, avg, sr, best, hasInnings: matches > 0 };
+}
+
+function shortBatGroup(g) {
+  if (!g) return '';
+  if (g.startsWith('Openers')) return 'Opener';
+  if (g.startsWith('Middle')) return 'Middle Order';
+  if (g.startsWith('Finisher')) return 'Finisher';
+  if (g.startsWith('Tailender')) return 'Tailender';
+  return g;
+}
+function shortBowlGroup(g) {
+  if (!g) return '';
+  return g;
+}
+
+function fmtAvg(n) { return n.toFixed(2).replace(/\.00$/, ''); }
+function fmtNum(n) { return n.toFixed(1).replace(/\.0$/, ''); }
+function matchNum(id) { const m = /M(\d+)/.exec(id); return m ? parseInt(m[1], 10) : 0; }
+
+/* ============ DASHBOARD ============ */
+function setDashDisc(d) {
+  dashDisc = d;
+  currentSort = d === 'bat' ? 'runs' : 'wickets';
+  document.querySelectorAll('#dashDisc button').forEach(b => b.classList.toggle('active', b.dataset.disc === d));
+  const accent = document.getElementById('dashAccent');
+  accent.className = d === 'bat' ? 'bat' : 'bowl';
+  accent.textContent = 'Almanack';
+  document.getElementById('leaderTitle').innerHTML = d === 'bat'
+    ? 'Top <em class="bat">Batters</em>'
+    : 'Top <em class="bowl">Bowlers</em>';
+  // Update match card border color hint
+  refreshAll();
+}
+
+function renderSortTabs() {
+  const opts = dashDisc === 'bat'
+    ? [['runs','Runs'],['avg','Avg'],['sr','SR'],['hs','HS']]
+    : [['wickets','Wkts'],['eco','Eco'],['avg','Avg'],['sr','SR']];
+  document.getElementById('sortTabs').innerHTML = opts.map(([k,l]) =>
+    `<button data-sort="${k}" class="${currentSort===k?'active':''}" onclick="setSort('${k}')">${l}</button>`
+  ).join('');
+}
+function setSort(k) { currentSort = k; renderSortTabs(); renderLeaderboard(); }
+
+function renderKPIs() {
+  const totals = {
+    bat: { runs: 0, top: { name:'—', val:0 }, topAvg: { name:'—', val:0 }, players: 0 },
+    bowl: { wkts: 0, top: { name:'—', val:0 }, bestEco: { name:'—', val:Infinity }, players: 0 },
+  };
+  DATA.players.forEach(p => {
+    const bs = battingStats(p);
+    if (bs.hasInnings) { totals.bat.players++; totals.bat.runs += bs.runs; }
+    if (bs.runs > totals.bat.top.val) totals.bat.top = { name: p.name, val: bs.runs };
+    if (bs.hasInnings && bs.avg > totals.bat.topAvg.val) totals.bat.topAvg = { name: p.name, val: bs.avg };
+    const bo = bowlingStats(p);
+    if (bo.hasInnings) { totals.bowl.players++; totals.bowl.wkts += bo.wickets; }
+    if (bo.wickets > totals.bowl.top.val) totals.bowl.top = { name: p.name, val: bo.wickets };
+    if (bo.hasInnings && bo.totalBalls >= 6 && bo.eco < totals.bowl.bestEco.val) totals.bowl.bestEco = { name: p.name, val: bo.eco };
+  });
+
+  const totalMatches = DATA.matches.length;
+  const matchIds = DATA.matches.map(m => m.id).join(' · ') || 'None yet';
+
+  let kpis;
+  if (dashDisc === 'bat') {
+    kpis = `
+      <div class="kpi bat">
+        <div class="label">Matches</div><div class="value">${totalMatches}</div>
+        <div class="sub">${matchIds}</div>
+      </div>
+      <div class="kpi bat">
+        <div class="label">Team Runs</div><div class="value">${totals.bat.runs}</div>
+        <div class="sub">across the season</div>
+      </div>
+      <div class="kpi bat">
+        <div class="label">Active Batters</div><div class="value">${totals.bat.players}</div>
+        <div class="sub">of ${DATA.players.length} on roster</div>
+      </div>
+      <div class="kpi bat">
+        <div class="label">Leading Scorer</div><div class="value">${totals.bat.top.val}</div>
+        <div class="sub">${totals.bat.top.name}</div>
+      </div>
+      <div class="kpi bat">
+        <div class="label">Best Average</div><div class="value">${fmtAvg(totals.bat.topAvg.val)}</div>
+        <div class="sub">${totals.bat.topAvg.name}</div>
+      </div>`;
+  } else {
+    kpis = `
+      <div class="kpi bowl">
+        <div class="label">Matches</div><div class="value">${totalMatches}</div>
+        <div class="sub">${matchIds}</div>
+      </div>
+      <div class="kpi bowl">
+        <div class="label">Team Wickets</div><div class="value">${totals.bowl.wkts}</div>
+        <div class="sub">across the season</div>
+      </div>
+      <div class="kpi bowl">
+        <div class="label">Active Bowlers</div><div class="value">${totals.bowl.players}</div>
+        <div class="sub">of ${DATA.players.length} on roster</div>
+      </div>
+      <div class="kpi bowl">
+        <div class="label">Most Wickets</div><div class="value">${totals.bowl.top.val}</div>
+        <div class="sub">${totals.bowl.top.name}</div>
+      </div>
+      <div class="kpi bowl">
+        <div class="label">Best Economy</div><div class="value">${isFinite(totals.bowl.bestEco.val) ? fmtAvg(totals.bowl.bestEco.val) : '—'}</div>
+        <div class="sub">${totals.bowl.bestEco.name}</div>
+      </div>`;
+  }
+  document.getElementById('kpiGrid').innerHTML = kpis;
+}
+
+function renderLeaderboard() {
+  if (dashDisc === 'bat') {
+    const rows = DATA.players
+      .map(p => ({ p, s: battingStats(p) }))
+      .filter(x => x.s.hasInnings);
+    const sorters = {
+      runs: (a, b) => b.s.runs - a.s.runs || b.s.avg - a.s.avg,
+      avg:  (a, b) => b.s.avg  - a.s.avg  || b.s.runs - a.s.runs,
+      sr:   (a, b) => b.s.sr   - a.s.sr   || b.s.runs - a.s.runs,
+      hs:   (a, b) => b.s.hs   - a.s.hs   || b.s.runs - a.s.runs,
+    };
+    rows.sort(sorters[currentSort] || sorters.runs);
+    const primary = {
+      runs: x => x.s.runs, avg: x => fmtAvg(x.s.avg),
+      sr: x => fmtNum(x.s.sr), hs: x => x.s.hs,
+    };
+    document.getElementById('leaderboardBody').innerHTML = rows.length ? rows.map((x, i) => `
+      <div class="lb-row ${i===0?'top-1':''} ${i<3?'top-3':''}" onclick="openPlayer('${escAttr(x.p.name)}')">
+        <div class="lb-rank bat">${String(i+1).padStart(2,'0')}</div>
+        <div>
+          <div class="lb-name">${esc(x.p.name)}</div>
+          <div class="lb-meta">${shortBatGroup(x.p.group) || 'Batter'} · ${x.s.matches}M · HS ${x.s.hs}</div>
+        </div>
+        <div class="lb-stats">Avg ${fmtAvg(x.s.avg)}<br/>SR ${fmtNum(x.s.sr)}</div>
+        <div class="lb-primary">${(primary[currentSort]||primary.runs)(x)}</div>
+      </div>
+    `).join('') : emptyLB('No innings recorded yet.');
+  } else {
+    const rows = DATA.players
+      .map(p => ({ p, s: bowlingStats(p) }))
+      .filter(x => x.s.hasInnings);
+    const sorters = {
+      wickets: (a, b) => b.s.wickets - a.s.wickets || a.s.eco - b.s.eco,
+      eco:     (a, b) => a.s.eco - b.s.eco || b.s.wickets - a.s.wickets,
+      avg:     (a, b) => (a.s.wickets===0?Infinity:a.s.avg) - (b.s.wickets===0?Infinity:b.s.avg) || b.s.wickets - a.s.wickets,
+      sr:      (a, b) => (a.s.wickets===0?Infinity:a.s.sr) - (b.s.wickets===0?Infinity:b.s.sr) || b.s.wickets - a.s.wickets,
+    };
+    rows.sort(sorters[currentSort] || sorters.wickets);
+    const primary = {
+      wickets: x => x.s.wickets,
+      eco: x => fmtAvg(x.s.eco),
+      avg: x => x.s.wickets > 0 ? fmtAvg(x.s.avg) : '—',
+      sr: x => x.s.wickets > 0 ? fmtAvg(x.s.sr) : '—',
+    };
+    document.getElementById('leaderboardBody').innerHTML = rows.length ? rows.map((x, i) => `
+      <div class="lb-row ${i===0?'top-1':''} ${i<3?'top-3':''}" onclick="openPlayer('${escAttr(x.p.name)}')">
+        <div class="lb-rank bowl">${String(i+1).padStart(2,'0')}</div>
+        <div>
+          <div class="lb-name">${esc(x.p.name)}</div>
+          <div class="lb-meta">${x.p.bowlGroup || 'Bowler'} · ${x.s.matches}M · ${fmtOvers(x.s.overs)} ov</div>
+        </div>
+        <div class="lb-stats">Eco ${fmtAvg(x.s.eco)}<br/>${x.s.wickets ? 'Avg '+fmtAvg(x.s.avg) : ''}</div>
+        <div class="lb-primary">${(primary[currentSort]||primary.wickets)(x)}</div>
+      </div>
+    `).join('') : emptyLB('No bowling figures yet.');
+  }
+}
+function emptyLB(msg) { return `<div class="empty" style="padding:30px 20px"><h3>Nothing here</h3>${msg}</div>`; }
+
+function renderMatchesCol() {
+  const sorted = [...DATA.matches].sort((a, b) => matchNum(b.id) - matchNum(a.id));
+  document.getElementById('matchesCol').innerHTML = sorted.map(m => matchCardHTML(m, false)).join('') || '<div class="empty"><h3>No matches yet</h3></div>';
+}
+
+function matchCardHTML(m, withFullInnings) {
+  const batInns = DATA.players
+    .filter(p => p.scores && p.scores[m.id])
+    .map(p => ({ name: p.name, ...p.scores[m.id] }));
+  const bowlInns = DATA.players
+    .filter(p => p.bowling && p.bowling[m.id])
+    .map(p => ({ name: p.name, ...p.bowling[m.id] }));
+  const totalRuns = batInns.reduce((s, i) => s + i.runs, 0);
+  const totalWkts = bowlInns.reduce((s, i) => s + i.wickets, 0);
+  const totalBallsBowled = bowlInns.reduce((s, i) => s + oversToBalls(i.overs), 0);
+  const totalOvers = ballsToOvers(totalBallsBowled);
+
+  const topBat = [...batInns].sort((a, b) => b.runs - a.runs).slice(0, withFullInnings ? 99 : 3);
+  const topBowl = [...bowlInns].sort((a, b) => b.wickets - a.wickets || a.runs - b.runs).slice(0, withFullInnings ? 99 : 3);
+
+  const canEdit = GH.isConfigured() && withFullInnings;
+  return `
+    <div class="match-card ${canEdit ? 'clickable' : ''}" ${canEdit ? `onclick="editMatch('${m.id}')"` : ''}>
+      <div class="match-row-1">
+        <span class="match-id-pill">${esc(m.id)}</span>
+        ${m.date ? `<span class="match-date">${esc(m.date)}</span>` : ''}
+      </div>
+      <div class="match-opp"><em>vs</em>${esc(m.opponent) || 'Opponent TBD'}</div>
+      <div class="match-totals">
+        <div class="match-half bat">
+          <div class="lbl">Batting</div>
+          <div class="val">${totalRuns}</div>
+          <div class="sub">${batInns.length} innings</div>
+        </div>
+        <div class="match-half bowl">
+          <div class="lbl">Bowling</div>
+          <div class="val">${totalWkts}<span style="font-size:14px;color:var(--text-3)">w</span></div>
+          <div class="sub">${fmtOvers(totalOvers)} ov · ${bowlInns.reduce((s,i)=>s+i.runs,0)} r</div>
+        </div>
+      </div>
+      ${(topBat.length || topBowl.length) ? '' : '<div style="color:var(--text-3);font-size:13px">No stats logged</div>'}
+      ${topBat.length ? `
+        <div class="top-perf-section">
+          <div class="top-perf-label bat">Top batters</div>
+          <div class="top-perf-row">
+            ${topBat.map(i => `<span class="perf"><span class="runs">${i.runs}${i.notOut?'*':''}</span>(${i.balls}) · <strong>${esc(i.name)}</strong></span>`).join('')}
+          </div>
+        </div>` : ''}
+      ${topBowl.length ? `
+        <div class="top-perf-section">
+          <div class="top-perf-label bowl">Top bowlers</div>
+          <div class="top-perf-row">
+            ${topBowl.map(i => `<span class="perf"><span class="wkts">${i.wickets}/${i.runs}</span> in ${fmtOvers(i.overs)} · <strong>${esc(i.name)}</strong></span>`).join('')}
+          </div>
+        </div>` : ''}
+    </div>
+  `;
+}
+
+/* ============ BATTING / BOWLING TABS ============ */
+function renderBattingTab() {
+  const groupOrder = ['Openers','Middle','Finisher','Tailender'];
+  const groups = ['All', ...groupOrder];
+  document.getElementById('battingFilters').innerHTML = groups.map(g =>
+    `<button class="chip ${g===battingFilter?'active bat':''}" onclick="setBattingFilter('${g}')">${g==='All'?'All batters':g}</button>`
+  ).join('');
+
+  let players = DATA.players.filter(p => battingStats(p).hasInnings || (p.group && p.group.length));
+  if (battingFilter !== 'All') {
+    players = players.filter(p => (p.group||'').startsWith(battingFilter));
+  }
+  players.sort((a, b) => {
+    const ai = groupOrder.findIndex(g => (a.group || '').startsWith(g));
+    const bi = groupOrder.findIndex(g => (b.group || '').startsWith(g));
+    if (ai !== bi) return ai - bi;
+    return battingStats(b).runs - battingStats(a).runs;
+  });
+
+  document.getElementById('battingGrid').innerHTML = players.length ? players.map(p => playerCardHTML(p, 'bat')).join('') : '<div class="empty"><h3>No batters in this group</h3></div>';
+}
+function setBattingFilter(g) { battingFilter = g; renderBattingTab(); }
+
+function renderBowlingTab() {
+  const bowlOrder = ['Pacers','Spinners'];
+  const groups = ['All', ...bowlOrder];
+  document.getElementById('bowlingFilters').innerHTML = groups.map(g =>
+    `<button class="chip ${g===bowlingFilter?'active bowl':''}" onclick="setBowlingFilter('${g}')">${g==='All'?'All bowlers':g}</button>`
+  ).join('');
+
+  let players = DATA.players.filter(p => bowlingStats(p).hasInnings || (p.bowlGroup && p.bowlGroup.length));
+  if (bowlingFilter !== 'All') {
+    players = players.filter(p => (p.bowlGroup||'') === bowlingFilter);
+  }
+  players.sort((a, b) => {
+    const ai = bowlOrder.indexOf(a.bowlGroup || '');
+    const bi = bowlOrder.indexOf(b.bowlGroup || '');
+    if (ai !== bi) return ai - bi;
+    return bowlingStats(b).wickets - bowlingStats(a).wickets;
+  });
+
+  document.getElementById('bowlingGrid').innerHTML = players.length ? players.map(p => playerCardHTML(p, 'bowl')).join('') : '<div class="empty"><h3>No bowlers in this group</h3></div>';
+}
+function setBowlingFilter(g) { bowlingFilter = g; renderBowlingTab(); }
+
+function playerCardHTML(p, focus) {
+  const bs = battingStats(p);
+  const bo = bowlingStats(p);
+  const roles = [];
+  if (p.group) roles.push(`<span class="player-pos bat">${shortBatGroup(p.group)}</span>`);
+  if (p.bowlGroup) roles.push(`<span class="player-pos bowl">${p.bowlGroup}</span>`);
+
+  const batBlock = `
+    <div class="player-stats-section">
+      <div class="player-stats-header">
+        <span class="lbl bat">Batting</span>
+        <span class="count">${bs.matches} ${bs.matches===1?'innings':'innings'}</span>
+      </div>
+      ${bs.hasInnings ? `
+        <div class="player-stats-row">
+          <div class="player-stat"><div class="pl">Runs</div><div class="pv">${bs.runs}</div></div>
+          <div class="player-stat"><div class="pl">Avg</div><div class="pv">${fmtAvg(bs.avg)}</div></div>
+          <div class="player-stat"><div class="pl">SR</div><div class="pv">${fmtNum(bs.sr)}</div></div>
+        </div>
+      ` : '<div class="player-empty">No innings yet</div>'}
+    </div>`;
+  const bowlBlock = `
+    <div class="player-stats-section">
+      <div class="player-stats-header">
+        <span class="lbl bowl">Bowling</span>
+        <span class="count">${bo.matches} ${bo.matches===1?'spell':'spells'}</span>
+      </div>
+      ${bo.hasInnings ? `
+        <div class="player-stats-row">
+          <div class="player-stat"><div class="pl">Wkts</div><div class="pv">${bo.wickets}</div></div>
+          <div class="player-stat"><div class="pl">Eco</div><div class="pv">${fmtAvg(bo.eco)}</div></div>
+          <div class="player-stat"><div class="pl">Overs</div><div class="pv">${fmtOvers(bo.overs)}</div></div>
+        </div>
+      ` : '<div class="player-empty">No spells yet</div>'}
+    </div>`;
+  return `
+    <div class="player-card" onclick="openPlayer('${escAttr(p.name)}')">
+      <div class="player-pos-row">${roles.join('') || '<span class="player-pos" style="color:var(--text-3)">Unassigned</span>'}</div>
+      <div class="player-name">${esc(p.name)}</div>
+      ${focus === 'bat' ? batBlock + bowlBlock : bowlBlock + batBlock}
+    </div>
+  `;
+}
+
+/* ============ MATCHES TAB ============ */
+function renderMatchGrid() {
+  const sorted = [...DATA.matches].sort((a, b) => matchNum(b.id) - matchNum(a.id));
+  document.getElementById('matchGrid').innerHTML = sorted.map(m => matchCardHTML(m, true)).join('') || '<div class="empty"><h3>No matches yet</h3></div>';
+}
+
+/* ============ PLAYER MODAL ============ */
+function openPlayer(name) {
+  const p = DATA.players.find(x => x.name === name);
+  if (!p) return;
+  const bs = battingStats(p);
+  const bo = bowlingStats(p);
+
+  const roles = [];
+  if (p.group) roles.push(`<span class="modal-role bat">${shortBatGroup(p.group)}</span>`);
+  if (p.bowlGroup) roles.push(`<span class="modal-role bowl">${p.bowlGroup}</span>`);
+  document.getElementById('modalRoles').innerHTML = roles.join('');
+  document.getElementById('modalName').textContent = p.name;
+
+  // build body
+  let html = '';
+
+  if (bs.hasInnings || p.group) {
+    html += `<div class="modal-section">
+      <div class="modal-section-head"><h4 class="bat">Batting</h4></div>
+      <div class="modal-kpis">
+        <div class="modal-kpi"><div class="l">Runs</div><div class="v">${bs.runs}</div></div>
+        <div class="modal-kpi"><div class="l">Matches</div><div class="v">${bs.matches}</div></div>
+        <div class="modal-kpi"><div class="l">Avg</div><div class="v">${bs.hasInnings ? fmtAvg(bs.avg) : '—'}</div></div>
+        <div class="modal-kpi"><div class="l">SR</div><div class="v">${bs.balls > 0 ? fmtNum(bs.sr) : '—'}</div></div>
+      </div>`;
+    const battingLog = DATA.matches
+      .filter(m => p.scores && p.scores[m.id])
+      .sort((a, b) => matchNum(a.id) - matchNum(b.id))
+      .map(m => {
+        const i = p.scores[m.id];
+        const sr = i.balls > 0 ? (i.runs / i.balls * 100).toFixed(1) : '—';
+        return `<div class="log-row">
+          <span class="m bat">${esc(m.id)}</span>
+          <span class="opp">${esc(m.opponent) || 'TBD'}</span>
+          <span class="score ${i.notOut ? 'no' : ''}">${i.runs}${i.notOut?'*':''} <span style="color:var(--text-3);font-size:13px">(${i.balls})</span></span>
+          <span class="extra">SR ${sr}</span>
+        </div>`;
+      }).join('');
+    html += battingLog || '<div class="modal-empty">No innings yet</div>';
+    html += '</div>';
+  }
+
+  if (bo.hasInnings || p.bowlGroup) {
+    html += `<div class="modal-section">
+      <div class="modal-section-head"><h4 class="bowl">Bowling</h4></div>
+      <div class="modal-kpis">
+        <div class="modal-kpi"><div class="l">Wickets</div><div class="v">${bo.wickets}</div></div>
+        <div class="modal-kpi"><div class="l">Overs</div><div class="v">${fmtOvers(bo.overs)}</div></div>
+        <div class="modal-kpi"><div class="l">Economy</div><div class="v">${bo.hasInnings ? fmtAvg(bo.eco) : '—'}</div></div>
+        <div class="modal-kpi"><div class="l">Avg</div><div class="v">${bo.wickets > 0 ? fmtAvg(bo.avg) : '—'}</div></div>
+      </div>`;
+    const bowlLog = DATA.matches
+      .filter(m => p.bowling && p.bowling[m.id])
+      .sort((a, b) => matchNum(a.id) - matchNum(b.id))
+      .map(m => {
+        const i = p.bowling[m.id];
+        const bb = oversToBalls(i.overs);
+        const eco = bb > 0 ? (i.runs / (bb/6)).toFixed(2) : '—';
+        return `<div class="log-row">
+          <span class="m bowl">${esc(m.id)}</span>
+          <span class="opp">${esc(m.opponent) || 'TBD'}</span>
+          <span class="score">${i.wickets}/${i.runs} <span style="color:var(--text-3);font-size:13px">(${fmtOvers(i.overs)})</span></span>
+          <span class="extra">Eco ${eco}</span>
+        </div>`;
+      }).join('');
+    html += bowlLog || '<div class="modal-empty">No spells yet</div>';
+    html += '</div>';
+  }
+
+  if (!html) html = '<div class="modal-empty">No stats recorded for this player yet.</div>';
+  document.getElementById('modalBody').innerHTML = html;
+  document.getElementById('modalBg').classList.add('open');
+}
+function closeModal() { document.getElementById('modalBg').classList.remove('open'); }
+function closeModalIfBg(e) { if (e.target.id === 'modalBg') closeModal(); }
+
+/* ============ EDIT FORM ============ */
+function setEditMode(d) {
+  editMode = d;
+  document.querySelectorAll('#editModeTabs button').forEach(b => b.classList.toggle('active', b.dataset.disc === d));
+  const accent = document.getElementById('editAccent');
+  accent.className = d === 'bat' ? 'bat' : 'bowl';
+  accent.textContent = 'Match';
+  document.getElementById('scoresLabel').textContent = d === 'bat'
+    ? 'Batting scorecard · leave blank if the player did not bat'
+    : 'Bowling card · leave blank if the player did not bowl';
+  document.getElementById('formCard').classList.toggle('bowl-mode', d === 'bowl');
+  document.getElementById('saveMatchBtn').className = 'btn ' + (d === 'bat' ? 'btn-primary' : 'btn-bowl');
+  renderEditForm();
+  const id = document.getElementById('matchSelect').value;
+  if (id && id !== '__new__') loadMatchIntoForm(id);
+}
+
+function renderEditForm() {
+  // Match selector
+  const sel = document.getElementById('matchSelect');
+  const curSel = sel.value || '__new__';
+  sel.innerHTML = '<option value="__new__">+ New match</option>' +
+    [...DATA.matches]
+      .sort((a, b) => matchNum(b.id) - matchNum(a.id))
+      .map(m => `<option value="${esc(m.id)}">${esc(m.id)} — vs ${esc(m.opponent) || 'TBD'}</option>`)
+      .join('');
+  sel.value = curSel;
+
+  // Scorecard head + body
+  const head = document.getElementById('scoresHead');
+  const body = document.getElementById('scoresBody');
+
+  if (editMode === 'bat') {
+    head.innerHTML = `
+      <span>Player</span>
+      <span style="text-align:center">Runs</span>
+      <span style="text-align:center">Balls</span>
+      <span style="text-align:center">Not out</span>
+      <span></span>
+    `;
+    const batters = DATA.players.filter(p => p.group || battingStats(p).hasInnings);
+    body.innerHTML = batters.length ? batters.map(p => {
+      const safe = safeId(p.name);
+      return `<div class="st-row" data-player="${escAttr(p.name)}">
+        <div class="pn">${esc(p.name)}<span class="g">${shortBatGroup(p.group)||'Unassigned'}</span></div>
+        <input type="number" min="0" placeholder="–" id="br_${safe}" />
+        <input type="number" min="0" placeholder="–" id="bb_${safe}" />
+        <div style="display:flex;justify-content:center"><input type="checkbox" id="bn_${safe}" /></div>
+        <button class="del-btn" onclick="removePlayer('${escAttr(p.name)}')" title="Remove from roster">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+        </button>
+      </div>`;
+    }).join('') : '<div class="scores-empty-hint">Add a batter to the roster to record innings.</div>';
+  } else {
+    head.innerHTML = `
+      <span>Player</span>
+      <span style="text-align:center">Overs</span>
+      <span style="text-align:center">Runs</span>
+      <span style="text-align:center">Wickets</span>
+      <span></span>
+    `;
+    const bowlers = DATA.players.filter(p => p.bowlGroup || bowlingStats(p).hasInnings);
+    body.innerHTML = bowlers.length ? bowlers.map(p => {
+      const safe = safeId(p.name);
+      return `<div class="st-row" data-player="${escAttr(p.name)}">
+        <div class="pn">${esc(p.name)}<span class="g">${p.bowlGroup||'Unassigned'}</span></div>
+        <input type="number" min="0" step="0.1" placeholder="3.4" id="wo_${safe}" />
+        <input type="number" min="0" placeholder="–" id="wr_${safe}" />
+        <input type="number" min="0" placeholder="–" id="ww_${safe}" />
+        <button class="del-btn" onclick="removePlayer('${escAttr(p.name)}')" title="Remove from roster">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+        </button>
+      </div>`;
+    }).join('') : '<div class="scores-empty-hint">Add a bowler to the roster to record spells.</div>';
+  }
+}
+
+function onMatchSelectChange() {
+  const id = document.getElementById('matchSelect').value;
+  if (id === '__new__') { resetForm(); return; }
+  loadMatchIntoForm(id);
+}
+function loadMatchIntoForm(id) {
+  const m = DATA.matches.find(x => x.id === id);
+  if (!m) return;
+  document.getElementById('matchId').value = m.id;
+  document.getElementById('matchOpp').value = m.opponent || '';
+  document.getElementById('matchDate').value = m.date || '';
+  document.getElementById('deleteBtn').style.display = 'inline-flex';
+
+  if (editMode === 'bat') {
+    DATA.players.forEach(p => {
+      const safe = safeId(p.name);
+      const sc = p.scores && p.scores[id];
+      const r = document.getElementById('br_' + safe);
+      const b = document.getElementById('bb_' + safe);
+      const n = document.getElementById('bn_' + safe);
+      if (r) r.value = sc ? sc.runs : '';
+      if (b) b.value = sc ? sc.balls : '';
+      if (n) n.checked = sc ? !!sc.notOut : false;
+    });
+  } else {
+    DATA.players.forEach(p => {
+      const safe = safeId(p.name);
+      const sc = p.bowling && p.bowling[id];
+      const o = document.getElementById('wo_' + safe);
+      const r = document.getElementById('wr_' + safe);
+      const w = document.getElementById('ww_' + safe);
+      if (o) o.value = sc ? sc.overs : '';
+      if (r) r.value = sc ? sc.runs : '';
+      if (w) w.value = sc ? sc.wickets : '';
+    });
+  }
+}
+function editMatch(id) {
+  if (!GH.isConfigured()) { toast('Connect to GitHub first', true); return; }
+  switchTab('edit');
+  document.getElementById('matchSelect').value = id;
+  loadMatchIntoForm(id);
+}
+function resetForm() {
+  document.getElementById('matchSelect').value = '__new__';
+  document.getElementById('matchId').value = nextMatchId();
+  document.getElementById('matchOpp').value = '';
+  document.getElementById('matchDate').value = '';
+  document.getElementById('deleteBtn').style.display = 'none';
+  document.querySelectorAll('#scoresBody input[type=number]').forEach(i => i.value = '');
+  document.querySelectorAll('#scoresBody input[type=checkbox]').forEach(i => i.checked = false);
+}
+function nextMatchId() {
+  const nums = DATA.matches.map(m => matchNum(m.id));
+  const max = nums.length ? Math.max(...nums) : 0;
+  return 'M' + (max + 1);
+}
+function saveMatch() {
+  const id = document.getElementById('matchId').value.trim();
+  const opp = document.getElementById('matchOpp').value.trim();
+  const date = document.getElementById('matchDate').value;
+  if (!id) { toast('Match ID is required', true); return; }
+
+  let m = DATA.matches.find(x => x.id === id);
+  if (!m) { m = { id, opponent: opp, date }; DATA.matches.push(m); }
+  else    { m.opponent = opp; m.date = date; }
+
+  if (editMode === 'bat') {
+    DATA.players.forEach(p => {
+      const safe = safeId(p.name);
+      const r = document.getElementById('br_' + safe);
+      if (!r) return;
+      const b = document.getElementById('bb_' + safe);
+      const n = document.getElementById('bn_' + safe);
+      const rv = r.value, bv = b.value;
+      p.scores = p.scores || {};
+      if (rv === '' && bv === '') { delete p.scores[id]; }
+      else {
+        p.scores[id] = { runs: parseInt(rv || '0', 10), balls: parseInt(bv || '0', 10), notOut: !!(n && n.checked) };
+      }
+    });
+  } else {
+    DATA.players.forEach(p => {
+      const safe = safeId(p.name);
+      const o = document.getElementById('wo_' + safe);
+      if (!o) return;
+      const r = document.getElementById('wr_' + safe);
+      const w = document.getElementById('ww_' + safe);
+      const ov = o.value, rv = r.value, wv = w.value;
+      p.bowling = p.bowling || {};
+      if (ov === '' && rv === '' && wv === '') { delete p.bowling[id]; }
+      else {
+        p.bowling[id] = { overs: parseFloat(ov || '0'), runs: parseInt(rv || '0', 10), wickets: parseInt(wv || '0', 10) };
+      }
+    });
+  }
+
+  markUnsaved();
+  refreshAll();
+  renderEditForm();
+  loadMatchIntoForm(id);
+  toast(`${editMode === 'bat' ? 'Batting' : 'Bowling'} for ${id} saved locally · press Save to push`);
+}
+function deleteCurrentMatch() {
+  const id = document.getElementById('matchSelect').value;
+  if (id === '__new__') return;
+  if (!confirm('Delete match ' + id + '? This removes all innings AND bowling figures for it.')) return;
+  DATA.matches = DATA.matches.filter(m => m.id !== id);
+  DATA.players.forEach(p => { if (p.scores) delete p.scores[id]; if (p.bowling) delete p.bowling[id]; });
+  markUnsaved();
+  resetForm();
+  renderEditForm();
+  refreshAll();
+  toast('Match deleted locally · press Save to push');
+}
+
+/* ============ ROSTER ============ */
+function openAddPlayer() { document.getElementById('addPlayerBg').classList.add('open'); }
+function closeAddPlayer() { document.getElementById('addPlayerBg').classList.remove('open'); }
+function closeAddPlayerIfBg(e) { if (e.target.id === 'addPlayerBg') closeAddPlayer(); }
+function addPlayer() {
+  const name = document.getElementById('newPlayerName').value.trim();
+  const isBat = document.getElementById('newPlayerBat').checked;
+  const isBowl = document.getElementById('newPlayerBowl').checked;
+  const group = document.getElementById('newPlayerGroup').value;
+  const bowlGroup = document.getElementById('newPlayerBowlGroup').value;
+  if (!name) { toast('Name is required', true); return; }
+  if (!isBat && !isBowl) { toast('Pick at least one role', true); return; }
+  if (DATA.players.find(p => p.name.toLowerCase() === name.toLowerCase())) {
+    toast('Player already exists', true); return;
+  }
+  DATA.players.push({
+    name,
+    group: isBat ? group : '',
+    bowlGroup: isBowl ? bowlGroup : '',
+    scores: {},
+    bowling: {},
+  });
+  document.getElementById('newPlayerName').value = '';
+  closeAddPlayer();
+  markUnsaved();
+  renderEditForm();
+  refreshAll();
+  toast(`${name} added · press Save to push`);
+}
+function removePlayer(name) {
+  if (!confirm('Remove ' + name + ' from the roster? Their innings and bowling figures will be deleted.')) return;
+  DATA.players = DATA.players.filter(p => p.name !== name);
+  markUnsaved();
+  renderEditForm();
+  refreshAll();
+  toast(name + ' removed · press Save to push');
+}
+
+/* ============ GITHUB SYNC ============ */
+async function loadFromGitHub() {
+  setSync('loading', 'Loading…');
+  try {
+    const res = await fetch('data.json?_=' + Date.now(), { cache: 'no-store' });
+    if (res.ok) {
+      const json = await res.json();
+      if (json.matches && json.players) {
+        DATA = normalize(json);
+        if (GH.isConfigured()) await fetchSHA();
+        setSync('live', GH.isConfigured() ? 'Editor connected' : 'Live (read-only)');
+        return;
+      }
+    }
+  } catch (e) { /* fall through */ }
+  DATA = JSON.parse(JSON.stringify(FALLBACK_DATA));
+  setSync('offline', 'Sample data');
+}
+
+async function fetchSHA() {
+  try {
+    const url = `https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${GH.path}?ref=${encodeURIComponent(GH.branch)}`;
+    const r = await fetch(url, {
+      headers: {
+        'Accept': 'application/vnd.github+json',
+        'Authorization': 'Bearer ' + GH.token,
+        'X-GitHub-Api-Version': '2022-11-28',
+      },
+    });
+    if (r.ok) {
+      const j = await r.json();
+      dataSHA = j.sha;
+      try {
+        const content = atob(j.content.replace(/\s/g, ''));
+        const parsed = JSON.parse(decodeURIComponent(escape(content)));
+        if (parsed && parsed.matches && parsed.players) DATA = normalize(parsed);
+      } catch (e) {}
+    } else if (r.status === 404) {
+      dataSHA = null;
+    } else throw new Error('GitHub returned ' + r.status);
+  } catch (err) {
+    console.error(err);
+    toast('Couldn\'t reach GitHub: ' + err.message, true);
+  }
+}
+
+async function saveToGitHub() {
+  if (!GH.isConfigured()) { openConnect(); return; }
+  setSync('loading', 'Saving…');
+  const btn = document.getElementById('saveBtn');
+  btn.disabled = true;
+  try {
+    await fetchSHA();
+    const json = JSON.stringify(DATA, null, 2);
+    const b64 = btoa(unescape(encodeURIComponent(json)));
+    const url = `https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${GH.path}`;
+    const body = {
+      message: 'Update stats — ' + new Date().toISOString(),
+      content: b64, branch: GH.branch,
+    };
+    if (dataSHA) body.sha = dataSHA;
+    const r = await fetch(url, {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/vnd.github+json',
+        'Authorization': 'Bearer ' + GH.token,
+        'X-GitHub-Api-Version': '2022-11-28',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    });
+    if (!r.ok) {
+      const errText = await r.text();
+      throw new Error(r.status + ' — ' + errText.slice(0, 160));
+    }
+    const j = await r.json();
+    dataSHA = j.content.sha;
+    unsaved = false;
+    updateUnsavedBadge();
+    setSync('live', 'Saved to GitHub');
+    toast('Saved · GitHub Pages updates in ~1 min');
+  } catch (err) {
+    console.error(err);
+    setSync('error', 'Save failed');
+    toast('Save failed: ' + err.message, true);
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+/* ============ CONNECT MODAL ============ */
+function openConnect() {
+  document.getElementById('ghOwner').value = GH.owner;
+  document.getElementById('ghRepo').value = GH.repo;
+  document.getElementById('ghBranch').value = GH.branch;
+  document.getElementById('ghPath').value = GH.path;
+  document.getElementById('ghToken').value = GH.token ? '••••••••••••••••' : '';
+  document.getElementById('disconnectBtn').style.display = GH.isConfigured() ? 'inline-flex' : 'none';
+  document.getElementById('connectBg').classList.add('open');
+}
+function closeConnect() { document.getElementById('connectBg').classList.remove('open'); }
+function closeConnectIfBg(e) { if (e.target.id === 'connectBg') closeConnect(); }
+async function connect() {
+  const owner = document.getElementById('ghOwner').value.trim();
+  const repo  = document.getElementById('ghRepo').value.trim();
+  const branch = document.getElementById('ghBranch').value.trim() || 'main';
+  const path = document.getElementById('ghPath').value.trim() || 'data.json';
+  let token = document.getElementById('ghToken').value.trim();
+  if (token === '••••••••••••••••') token = GH.token;
+  if (!owner || !repo || !token) { toast('Username, repo, and token are required', true); return; }
+  setSync('loading', 'Verifying…');
+  try {
+    const url = `https://api.github.com/repos/${owner}/${repo}/contents/${path}?ref=${encodeURIComponent(branch)}`;
+    const r = await fetch(url, {
+      headers: {
+        'Accept': 'application/vnd.github+json',
+        'Authorization': 'Bearer ' + token,
+        'X-GitHub-Api-Version': '2022-11-28',
+      },
+    });
+    if (!r.ok && r.status !== 404) {
+      throw new Error('GitHub returned ' + r.status + '. Check token permissions (Contents: Read & write) and repo name.');
+    }
+    localStorage.setItem('gh_owner', owner);
+    localStorage.setItem('gh_repo', repo);
+    localStorage.setItem('gh_branch', branch);
+    localStorage.setItem('gh_path', path);
+    localStorage.setItem('gh_token', token);
+    if (r.ok) {
+      const j = await r.json();
+      dataSHA = j.sha;
+      try {
+        const content = atob(j.content.replace(/\s/g, ''));
+        const parsed = JSON.parse(decodeURIComponent(escape(content)));
+        if (parsed && parsed.matches && parsed.players) DATA = normalize(parsed);
+      } catch (e) {}
+    } else { dataSHA = null; }
+    document.body.classList.add('editor');
+    document.getElementById('connectBtnText').textContent = 'Connected';
+    setSync('live', 'Editor connected');
+    closeConnect();
+    refreshAll();
+    renderEditForm();
+    toast('Connected · you can now edit & save');
+  } catch (err) {
+    setSync('error', 'Connection failed');
+    toast(err.message, true);
+  }
+}
+function disconnect() {
+  if (!confirm('Disconnect from GitHub?')) return;
+  ['gh_owner','gh_repo','gh_branch','gh_path','gh_token'].forEach(k => localStorage.removeItem(k));
+  document.body.classList.remove('editor');
+  document.getElementById('connectBtnText').textContent = 'Connect';
+  dataSHA = null;
+  unsaved = false;
+  updateUnsavedBadge();
+  closeConnect();
+  setSync('offline', 'Viewing only');
+  loadFromGitHub().then(refreshAll);
+}
+
+/* ============ UTIL ============ */
+function esc(s) { return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function escAttr(s) { return String(s ?? '').replace(/'/g, "\\'").replace(/"/g, '&quot;'); }
+function safeId(s) { return String(s).replace(/[^a-zA-Z0-9]/g, '_'); }
+function normalize(d) {
+  d.players = d.players || [];
+  d.matches = d.matches || [];
+  d.players.forEach(p => {
+    p.scores = p.scores || {};
+    p.bowling = p.bowling || {};
+    p.group = p.group || '';
+    p.bowlGroup = p.bowlGroup || '';
+  });
+  return d;
+}
+function markUnsaved() { unsaved = true; updateUnsavedBadge(); }
+function updateUnsavedBadge() { document.getElementById('unsavedBadge').classList.toggle('show', unsaved); }
+function setSync(state, text) {
+  const pill = document.getElementById('syncPill');
+  pill.querySelector('.status-dot').className = 'status-dot ' + (
+    state === 'live' ? 'green' : state === 'loading' ? 'amber' : state === 'error' ? 'red' : ''
+  );
+  document.getElementById('syncText').textContent = text;
+}
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === name));
+  document.querySelectorAll('.panel').forEach(p => p.classList.toggle('active', p.id === 'panel-' + name));
+  if (name === 'edit' && !document.getElementById('matchId').value) {
+    document.getElementById('matchId').value = nextMatchId();
+  }
+}
+function toast(msg, isErr) {
+  const t = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg;
+  t.classList.toggle('err', !!isErr);
+  t.classList.add('show');
+  clearTimeout(window._toastT);
+  window._toastT = setTimeout(() => t.classList.remove('show'), 2800);
+}
+function refreshAll() {
+  renderKPIs();
+  renderSortTabs();
+  renderLeaderboard();
+  renderMatchesCol();
+  renderBattingTab();
+  renderBowlingTab();
+  renderMatchGrid();
+}
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') { closeModal(); closeConnect(); closeAddPlayer(); }
+});
+window.addEventListener('beforeunload', (e) => {
+  if (unsaved) { e.preventDefault(); e.returnValue = ''; }
+});
+
+/* ============ BOOT ============ */
+(async function init() {
+  if (GH.isConfigured()) {
+    document.body.classList.add('editor');
+    document.getElementById('connectBtnText').textContent = 'Connected';
+  }
+  await loadFromGitHub();
+  refreshAll();
+  renderEditForm();
+})();
+</script>
+
+</body>
+</html>
