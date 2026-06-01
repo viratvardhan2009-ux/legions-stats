@@ -45,17 +45,17 @@
       },
       "bowling": {
         "M3": {
-          "overs": 4.0,
+          "overs": 4,
           "runs": 7,
           "wickets": 1
         },
         "M4": {
-          "overs": 2.0,
+          "overs": 2,
           "runs": 16,
           "wickets": 1
         },
         "M5": {
-          "overs": 1.0,
+          "overs": 1,
           "runs": 11,
           "wickets": 0
         }
@@ -135,17 +135,17 @@
       },
       "bowling": {
         "M3": {
-          "overs": 3.0,
+          "overs": 3,
           "runs": 7,
           "wickets": 2
         },
         "M4": {
-          "overs": 3.0,
+          "overs": 3,
           "runs": 20,
           "wickets": 1
         },
         "M5": {
-          "overs": 5.0,
+          "overs": 5,
           "runs": 18,
           "wickets": 1
         }
@@ -169,7 +169,7 @@
       },
       "bowling": {
         "M5": {
-          "overs": 1.0,
+          "overs": 1,
           "runs": 6,
           "wickets": 0
         }
@@ -198,7 +198,7 @@
       },
       "bowling": {
         "M3": {
-          "overs": 5.0,
+          "overs": 5,
           "runs": 4,
           "wickets": 0
         },
@@ -208,7 +208,7 @@
           "wickets": 0
         },
         "M5": {
-          "overs": 8.0,
+          "overs": 8,
           "runs": 19,
           "wickets": 1
         }
@@ -253,7 +253,7 @@
       },
       "bowling": {
         "M5": {
-          "overs": 2.0,
+          "overs": 2,
           "runs": 14,
           "wickets": 0
         }
@@ -295,12 +295,12 @@
       },
       "bowling": {
         "M1": {
-          "overs": 3.0,
+          "overs": 3,
           "runs": 16,
           "wickets": 0
         },
         "M3": {
-          "overs": 4.0,
+          "overs": 4,
           "runs": 15,
           "wickets": 2
         }
@@ -329,17 +329,17 @@
       },
       "bowling": {
         "M3": {
-          "overs": 4.0,
+          "overs": 4,
           "runs": 7,
           "wickets": 1
         },
         "M4": {
-          "overs": 2.0,
+          "overs": 2,
           "runs": 16,
           "wickets": 1
         },
         "M5": {
-          "overs": 3.0,
+          "overs": 3,
           "runs": 18,
           "wickets": 0
         }
@@ -358,7 +358,7 @@
       },
       "bowling": {
         "M1": {
-          "overs": 2.0,
+          "overs": 2,
           "runs": 17,
           "wickets": 0
         }
@@ -387,12 +387,12 @@
       },
       "bowling": {
         "M3": {
-          "overs": 1.0,
+          "overs": 1,
           "runs": 2,
           "wickets": 2
         },
         "M4": {
-          "overs": 1.0,
+          "overs": 1,
           "runs": 2,
           "wickets": 0
         },
@@ -416,7 +416,7 @@
       },
       "bowling": {
         "M3": {
-          "overs": 4.0,
+          "overs": 4,
           "runs": 16,
           "wickets": 1
         }
@@ -460,7 +460,7 @@
       "scores": {},
       "bowling": {
         "M1": {
-          "overs": 4.0,
+          "overs": 4,
           "runs": 19,
           "wickets": 1
         }
@@ -473,7 +473,7 @@
       "scores": {},
       "bowling": {
         "M1": {
-          "overs": 6.0,
+          "overs": 6,
           "runs": 29,
           "wickets": 4
         }
@@ -486,7 +486,7 @@
       "scores": {},
       "bowling": {
         "M1": {
-          "overs": 6.0,
+          "overs": 6,
           "runs": 18,
           "wickets": 2
         }
