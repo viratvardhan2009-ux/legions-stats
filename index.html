@@ -7,6 +7,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<!-- PDF.js: parses uploaded CricClubs match-report PDFs entirely in the browser -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <style>
   :root {
     --bg: #0a0a0b;
@@ -700,6 +702,74 @@
 
   body:not(.editor) .editor-only { display: none !important; }
 
+  /* ============ PDF IMPORT ============ */
+  .pdf-import {
+    border: 1px dashed var(--border); background: var(--surface-2);
+    border-radius: var(--radius-sm); padding: 16px;
+    display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+  .pdf-import .pdf-cta { display: flex; flex-direction: column; gap: 2px; }
+  .pdf-import .pdf-cta strong { font-size: 14px; }
+  .pdf-import .pdf-cta span {
+    font-size: 12px; color: var(--text-3);
+  }
+  .pdf-import .btn { white-space: nowrap; }
+  .pdf-import.busy { opacity: 0.6; pointer-events: none; }
+  .pdf-divider {
+    display: flex; align-items: center; gap: 12px;
+    margin: 0 0 18px; color: var(--text-3);
+    font-family: 'Geist Mono', monospace; font-size: 10px;
+    text-transform: uppercase; letter-spacing: 0.1em;
+  }
+  .pdf-divider::before, .pdf-divider::after {
+    content: ""; flex: 1; height: 1px; background: var(--border-soft);
+  }
+
+  /* ---- review modal ---- */
+  .pdf-review-card { max-width: 720px; padding: 0; }
+  .pdf-review-card .modal-body { padding: 0 24px 24px; }
+  .pdf-team-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px; flex-wrap: wrap;
+    background: var(--surface-2); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 12px 14px; margin-bottom: 16px;
+  }
+  .pdf-team-bar .who { font-size: 14px; }
+  .pdf-team-bar .who b { color: var(--bat); }
+  .pdf-team-bar .who .vs { color: var(--text-3); }
+  .pdf-review-section { margin-bottom: 18px; }
+  .pdf-review-section h4 {
+    font-family: 'Geist Mono', monospace; font-size: 11px;
+    text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 10px;
+  }
+  .pdf-review-section h4.bat { color: var(--bat); }
+  .pdf-review-section h4.bowl { color: var(--bowl); }
+  .pdf-map-row {
+    display: grid; grid-template-columns: 1fr 92px 1.1fr;
+    gap: 10px; align-items: center;
+    padding: 8px 0; border-bottom: 1px solid var(--border-soft);
+  }
+  .pdf-map-row:last-child { border-bottom: none; }
+  .pdf-map-row .pdf-nm { font-size: 13px; font-weight: 500; }
+  .pdf-map-row .pdf-fig {
+    font-family: 'Geist Mono', monospace; font-size: 12px;
+    color: var(--text-2); text-align: center;
+  }
+  .pdf-map-row .pdf-fig .no { color: var(--bat); }
+  .pdf-map-row select {
+    width: 100%; padding: 7px 8px; font-size: 12px;
+    background: var(--surface-2); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); color: var(--text);
+  }
+  .pdf-map-row select.is-new { border-color: var(--bat); color: var(--bat); }
+  .pdf-map-row select.is-skip { color: var(--text-3); }
+  .pdf-review-empty { color: var(--text-3); font-size: 13px; padding: 6px 0; }
+  @media (max-width: 520px) {
+    .pdf-map-row { grid-template-columns: 1fr 70px; }
+    .pdf-map-row select { grid-column: 1 / -1; }
+  }
+
   @media (max-width: 600px) {
     main { padding: 20px 16px 60px; }
     .header-inner, .tabs { padding-left: 16px; padding-right: 16px; }
@@ -820,6 +890,18 @@
       <button data-disc="bowl" onclick="setEditMode('bowl')">Bowling</button>
     </div>
     <div class="form-card" id="formCard">
+      <div class="pdf-import" id="pdfImport">
+        <input type="file" id="pdfFile" accept="application/pdf" hidden onchange="onPdfChosen(event)" />
+        <div class="pdf-cta">
+          <strong>Upload match report PDF</strong>
+          <span id="pdfImportHint">Auto-fills batting &amp; bowling from a CricClubs scorecard — no manual typing</span>
+        </div>
+        <button class="btn btn-primary" type="button" id="pdfImportBtn" onclick="document.getElementById('pdfFile').click()">
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px;vertical-align:-2px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          Choose PDF
+        </button>
+      </div>
+      <div class="pdf-divider">or enter manually</div>
       <div class="form-row">
         <div class="field">
           <label>Match</label>
@@ -896,7 +978,7 @@
       <div class="help-card">
         <h3>4. Connect &amp; edit</h3>
         <p>Open your live site, click <strong>Connect</strong>, paste the token plus your username and repo name. The token stays in your browser (localStorage) only.</p>
-        <p>Once connected, <strong>+ Add / Edit</strong> appears in the nav. Toggle between <em style="color:var(--bat)">Batting</em> and <em style="color:var(--bowl)">Bowling</em> at the top of the form to record either kind of stat for each match.</p>
+        <p>Once connected, <strong>+ Add / Edit</strong> appears in the nav. The fastest way to record a match is to <strong>Upload match report PDF</strong> — pick the CricClubs score-card PDF and it auto-fills every batting &amp; bowling figure for review. You can still toggle between <em style="color:var(--bat)">Batting</em> and <em style="color:var(--bowl)">Bowling</em> to enter or tweak stats by hand.</p>
       </div>
       <div class="help-card">
         <h3>How bowling stats work</h3>
@@ -1009,6 +1091,54 @@
     <div class="form-actions" style="border:none;padding:0;margin-top:14px">
       <button class="btn" onclick="closeAddPlayer()">Cancel</button>
       <button class="btn btn-primary" onclick="addPlayer()">Add to roster</button>
+    </div>
+  </div>
+</div>
+
+<!-- PDF REVIEW MODAL -->
+<div class="modal-bg" id="pdfReviewBg" onclick="closePdfReviewIfBg(event)">
+  <div class="modal pdf-review-card">
+    <div class="modal-header">
+      <button class="modal-close" onclick="closePdfReview()">×</button>
+      <div class="modal-roles"><span class="modal-role bat">From PDF</span></div>
+      <div class="modal-name">Review &amp; import</div>
+    </div>
+    <div class="modal-body">
+      <div class="pdf-team-bar">
+        <div class="who" id="pdfWho"></div>
+        <button class="btn" type="button" id="pdfSwapBtn" onclick="swapPdfTeams()" style="display:none">Swap — that's not us</button>
+      </div>
+      <div class="form-row">
+        <div class="field">
+          <label>Match ID</label>
+          <input type="text" id="pdfMatchId" placeholder="M6" />
+        </div>
+        <div class="field">
+          <label>Date</label>
+          <input type="date" id="pdfMatchDate" />
+        </div>
+      </div>
+      <div class="field" style="margin:12px 0 4px">
+        <label>Opponent</label>
+        <input type="text" id="pdfMatchOpp" placeholder="Opponent" />
+      </div>
+
+      <div class="pdf-review-section" style="margin-top:18px">
+        <h4 class="bat">Batting · our innings</h4>
+        <div id="pdfBatRows"></div>
+      </div>
+      <div class="pdf-review-section">
+        <h4 class="bowl">Bowling · our figures</h4>
+        <div id="pdfBowlRows"></div>
+      </div>
+
+      <p class="pdf-review-empty" style="margin-bottom:14px">
+        Players not in your roster are added automatically. Nothing is pushed to GitHub until you press <strong>Save</strong>.
+      </p>
+      <div class="form-actions" style="border:none;padding:0;margin:0">
+        <button class="btn" type="button" onclick="closePdfReview()">Cancel</button>
+        <button class="btn btn-primary" type="button" onclick="applyPdfImport()">Import into form</button>
+      </div>
     </div>
   </div>
 </div>
@@ -1714,6 +1844,382 @@ function removePlayer(name) {
   renderEditForm();
   refreshAll();
   toast(name + ' removed · press Save to push');
+}
+
+/* ============ PDF IMPORT ============ */
+// Parses a CricClubs "Score Card PDF" entirely in the browser (PDF.js), figures
+// out which of the two teams is ours, and stages batting + bowling figures for
+// review before they are written into the edit form.
+let PDF_REVIEW = null; // { innings:[...], ourTeam, oppTeam, batting:[], bowling:[] }
+
+async function onPdfChosen(event) {
+  const file = event.target.files && event.target.files[0];
+  event.target.value = ''; // allow re-selecting the same file
+  if (!file) return;
+  if (typeof pdfjsLib === 'undefined') {
+    toast('PDF reader failed to load — check your connection', true); return;
+  }
+  pdfjsLib.GlobalWorkerOptions.workerSrc =
+    'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+  const wrap = document.getElementById('pdfImport');
+  const hint = document.getElementById('pdfImportHint');
+  wrap.classList.add('busy');
+  hint.textContent = 'Reading ' + file.name + '…';
+  try {
+    const lines = await pdfTextLines(file);
+    const innings = extractInnings(lines);
+    if (!innings.length) throw new Error('No scorecard tables found in this PDF');
+    const meta = extractMeta(lines, innings);
+    PDF_REVIEW = { innings, meta };
+    pickOurTeam();
+    openPdfReview();
+  } catch (err) {
+    console.error(err);
+    toast('Couldn\'t read this PDF: ' + err.message, true);
+  } finally {
+    wrap.classList.remove('busy');
+    hint.textContent = 'Auto-fills batting & bowling from a CricClubs scorecard — no manual typing';
+  }
+}
+
+// --- low level: PDF -> ordered rows. CricClubs PDFs emit text one glyph at a
+// time, so each row keeps its positioned items; words/columns are rebuilt by
+// clustering items on the x-axis (a wide horizontal gap = a real space). ---
+async function pdfTextLines(file) {
+  const buf = await file.arrayBuffer();
+  const pdf = await pdfjsLib.getDocument({ data: buf }).promise;
+  const all = [];
+  for (let p = 1; p <= pdf.numPages; p++) {
+    const page = await pdf.getPage(p);
+    const tc = await page.getTextContent();
+    const items = tc.items
+      .map(it => ({ x: it.transform[4], y: it.transform[5], str: (it.str || '').trim() }))
+      .filter(it => it.str !== '');
+    // group into rows by y (PDF y grows upward → sort descending)
+    items.sort((a, b) => b.y - a.y || a.x - b.x);
+    const rows = [];
+    const TOL = 3;
+    for (const it of items) {
+      let row = rows.find(r => Math.abs(r.y - it.y) <= TOL);
+      if (!row) { row = { y: it.y, items: [] }; rows.push(row); }
+      row.items.push(it);
+    }
+    rows.forEach(r => {
+      r.items.sort((a, b) => a.x - b.x);
+      r.text = clusterRow(r.items).map(g => g.str).join(' ').replace(/\s+/g, ' ').trim();
+      all.push(r);
+    });
+  }
+  return all;
+}
+
+// Group a row's glyphs into clusters; a gap wider than GAP starts a new cluster
+// (a column boundary or a word space). Returns { x, str, label } per cluster.
+const CLUSTER_GAP = 22;
+function clusterRow(items, gap) {
+  const g = gap || CLUSTER_GAP;
+  const sorted = [...items].sort((a, b) => a.x - b.x);
+  const groups = [];
+  let cur = null;
+  for (const it of sorted) {
+    if (!cur || it.x - cur.lastX > g) { cur = { x: it.x, lastX: it.x, str: it.str }; groups.push(cur); }
+    else { cur.str += it.str; cur.lastX = it.x; }
+  }
+  return groups.map(g => ({ x: g.x, str: g.str, label: g.str.toLowerCase().replace(/[^a-z0-9]/g, '') }));
+}
+function rowLabels(items) { return clusterRow(items).map(c => c.label).join(' '); }
+function isBatHeader(items) { const l = rowLabels(items); return /batsman/.test(l) && /runs/.test(l) && /balls/.test(l); }
+function isBowlHeader(items) { const l = rowLabels(items); return /bowler/.test(l) && /overs/.test(l) && /wkts/.test(l); }
+function despace(s) { return String(s || '').replace(/\s+/g, '').toLowerCase(); }
+// turn a no-space glyph blob into readable words: "KarthikeyaGade" -> "Karthikeya Gade"
+function unblob(s) { return String(s || '').replace(/([a-z])([A-Z])/g, '$1 $2').replace(/\s+/g, ' ').trim(); }
+
+// Derive column anchors from a (clustered) header row, keyed by keyword.
+function colsFromHeader(items, mapping) {
+  return clusterRow(items).map((g, idx) => {
+    let key = 'x' + idx;
+    for (const m of mapping) { if (m.test(g.label)) { key = m.key; break; } }
+    return { key, x: g.x };
+  }).sort((a, b) => a.x - b.x);
+}
+// Bucket each glyph of a data row into the column whose left anchor it sits at.
+function assignCols(items, cols) {
+  const out = {}; cols.forEach(c => (out[c.key] = []));
+  const sorted = [...items].sort((a, b) => a.x - b.x);
+  for (const it of sorted) {
+    let chosen = cols[0];
+    for (const c of cols) { if (it.x >= c.x - 4) chosen = c; else break; }
+    out[chosen.key].push(it.str);
+  }
+  const joined = {};
+  for (const k in out) joined[k] = out[k].join('').trim();
+  return joined;
+}
+const BAT_MAP = [
+  { key: 'sno', test: l => /sno/.test(l) },
+  { key: 'name', test: l => /batsman/.test(l) },
+  { key: 'howout', test: l => /^how/.test(l) },
+  { key: 'runs', test: l => /^runs$/.test(l) },
+  { key: 'balls', test: l => /^balls$/.test(l) },
+];
+const BOWL_MAP = [
+  { key: 'sno', test: l => /sno/.test(l) },
+  { key: 'name', test: l => /bowler/.test(l) },
+  { key: 'overs', test: l => /overs/.test(l) },
+  { key: 'mdns', test: l => /mdns/.test(l) },
+  { key: 'runs', test: l => /^runs$/.test(l) },
+  { key: 'wkts', test: l => /wkts/.test(l) },
+];
+
+// Walk the row list, pulling out each innings: who batted, their batsmen, and
+// the opposition bowlers listed beneath them.
+function extractInnings(lines) {
+  const innings = [];
+  for (let i = 0; i < lines.length; i++) {
+    if (!isBatHeader(lines[i].items)) continue;
+
+    let team = '';
+    for (let j = i - 1; j >= Math.max(0, i - 5); j--) {
+      const mm = /^(.+?)\s*-\s*\d+\s*$/.exec(lines[j].text);
+      if (mm) { team = mm[1].trim(); break; }
+    }
+
+    const bc = colsFromHeader(lines[i].items, BAT_MAP);
+    const batsmen = [];
+    let k = i + 1;
+    for (; k < lines.length; k++) {
+      const dl = despace(lines[k].text);
+      if (dl.startsWith('extras') || dl.startsWith('total')) break;
+      if (isBowlHeader(lines[k].items)) break;
+      const row = assignCols(lines[k].items, bc);
+      const sno = parseInt(row.sno, 10);
+      if (!sno) continue;
+      let name = unblob(row.name);
+      let notOut = false;
+      if (name.endsWith('*')) { notOut = true; name = name.slice(0, -1).trim(); }
+      if (!name) continue;
+      const howout = (row.howout || '').trim();
+      const runs = parseInt(row.runs || '0', 10) || 0;
+      const balls = parseInt(row.balls || '0', 10) || 0;
+      // genuinely "did not bat" rows are all-zero with no dismissal — skip them
+      if (!notOut && howout === '' && runs === 0 && balls === 0) continue;
+      if (howout === '') notOut = true;
+      batsmen.push({ name, runs, balls, notOut });
+    }
+
+    // locate the bowling table that follows
+    let b = k;
+    for (; b < lines.length; b++) {
+      if (isBowlHeader(lines[b].items)) break;
+      if (isBatHeader(lines[b].items)) { b = -1; break; }
+    }
+    const bowlers = [];
+    if (b >= 0 && b < lines.length) {
+      const wc = colsFromHeader(lines[b].items, BOWL_MAP);
+      for (let r = b + 1; r < lines.length; r++) {
+        if (despace(lines[r].text).startsWith('fallofwickets')) break;
+        if (isBatHeader(lines[r].items)) break;
+        const row = assignCols(lines[r].items, wc);
+        const sno = parseInt(row.sno, 10);
+        if (!sno) continue;
+        const name = unblob(row.name);
+        const overs = parseFloat(row.overs || '0') || 0;
+        if (!name || overs <= 0) continue;
+        bowlers.push({
+          name,
+          overs,
+          runs: parseInt(row.runs || '0', 10) || 0,
+          wickets: parseInt(row.wkts || '0', 10) || 0,
+        });
+      }
+    }
+    innings.push({ battingTeam: team, batsmen, bowlers });
+  }
+  return innings;
+}
+
+function extractMeta(lines, innings) {
+  let date = '';
+  const teams = innings.map(i => i.battingTeam).filter(Boolean);
+  for (const l of lines) {
+    const dm = /\b(\d{2})\/(\d{2})\/(\d{4})\b/.exec(l.text);
+    if (dm) { date = dm[3] + '-' + dm[1] + '-' + dm[2]; break; }
+  }
+  return { date, teams };
+}
+
+// Decide which innings is "ours". Prefer the side whose players best match the
+// existing roster; fall back to a name-token overlap with DATA.team.
+function pickOurTeam() {
+  const inns = PDF_REVIEW.innings;
+  const teamTokens = normName(DATA.team || '').split(' ').filter(w => w.length > 2);
+  let best = -1, bestScore = -1;
+  inns.forEach((inn, idx) => {
+    const other = inns.find((_, j) => j !== idx) || { bowlers: [] };
+    const ourSide = inn.batsmen.concat(other.bowlers);
+    let score = ourSide.reduce((n, pl) => n + (matchRoster(pl.name) ? 1 : 0), 0);
+    const tt = normName(inn.battingTeam || '');
+    if (teamTokens.some(w => tt.includes(w))) score += 5;
+    if (score > bestScore) { bestScore = score; best = idx; }
+  });
+  setOurTeam(best < 0 ? 0 : best);
+}
+
+function setOurTeam(idx) {
+  const inns = PDF_REVIEW.innings;
+  const ourInn = inns[idx];
+  const oppInn = inns.find((_, j) => j !== idx) || { batsmen: [], bowlers: [] };
+  PDF_REVIEW.ourIdx = idx;
+  PDF_REVIEW.ourTeam = ourInn.battingTeam || 'Our team';
+  PDF_REVIEW.oppTeam = oppInn.battingTeam || (PDF_REVIEW.meta.teams.find(t => t !== ourInn.battingTeam) || '');
+  PDF_REVIEW.batting = ourInn.batsmen.slice();   // we batted here
+  PDF_REVIEW.bowling = oppInn.bowlers.slice();    // we bowled while they batted
+}
+
+/* ---- name matching ---- */
+function normName(s) { return String(s || '').toLowerCase().replace(/[^a-z\s]/g, ' ').replace(/\s+/g, ' ').trim(); }
+function firstToken(s) { return normName(s).split(' ')[0] || ''; }
+function levenshtein(a, b) {
+  const m = a.length, n = b.length;
+  if (!m) return n; if (!n) return m;
+  const d = Array.from({ length: m + 1 }, (_, i) => [i].concat(Array(n).fill(0)));
+  for (let j = 0; j <= n; j++) d[0][j] = j;
+  for (let i = 1; i <= m; i++) for (let j = 1; j <= n; j++)
+    d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+  return d[m][n];
+}
+// Best-effort map of a PDF (usually full) name to an existing roster player.
+function matchRoster(pdfName) {
+  const target = normName(pdfName), tf = firstToken(pdfName);
+  let best = null, bestScore = Infinity;
+  for (const p of DATA.players) {
+    const pn = normName(p.name), pf = firstToken(p.name);
+    let score;
+    if (pn && pn === target) score = 0;
+    else if (pf && tf && pf === tf) score = 1;
+    else if (pf && tf && levenshtein(pf, tf) <= 1) score = 2;
+    else if (pn.length >= 3 && (target.includes(pn) || pn.includes(target))) score = 3;
+    else continue;
+    if (score < bestScore) { bestScore = score; best = p; }
+  }
+  return best;
+}
+
+/* ---- review modal ---- */
+function openPdfReview() {
+  const id = (document.getElementById('matchId').value || '').trim() || nextMatchId();
+  document.getElementById('pdfMatchId').value = id;
+  document.getElementById('pdfMatchOpp').value = PDF_REVIEW.oppTeam || '';
+  document.getElementById('pdfMatchDate').value = PDF_REVIEW.meta.date || '';
+  document.getElementById('pdfSwapBtn').style.display =
+    PDF_REVIEW.innings.length > 1 ? 'inline-flex' : 'none';
+  renderPdfReview();
+  document.getElementById('pdfReviewBg').classList.add('open');
+}
+function swapPdfTeams() {
+  if (PDF_REVIEW.innings.length < 2) return;
+  setOurTeam(PDF_REVIEW.ourIdx === 0 ? 1 : 0);
+  document.getElementById('pdfMatchOpp').value = PDF_REVIEW.oppTeam || '';
+  renderPdfReview();
+}
+function rosterOptions(selectedName, isNew) {
+  const opts = DATA.players.map(p =>
+    `<option value="${escAttr(p.name)}"${p.name === selectedName ? ' selected' : ''}>${esc(p.name)}</option>`
+  ).join('');
+  return `<option value="__add__"${isNew ? ' selected' : ''}>➕ Add new player</option>` +
+         opts +
+         `<option value="__skip__">Skip — don't import</option>`;
+}
+function mapRowHTML(kind, idx, name, figure, matched) {
+  const sel = matched ? matched.name : null;
+  const cls = matched ? '' : 'is-new';
+  return `<div class="pdf-map-row">
+    <div class="pdf-nm">${esc(name)}</div>
+    <div class="pdf-fig">${figure}</div>
+    <select id="pmap_${kind}_${idx}" class="${cls}" onchange="onPdfMapChange(this)">
+      ${rosterOptions(sel, !matched)}
+    </select>
+  </div>`;
+}
+function renderPdfReview() {
+  document.getElementById('pdfWho').innerHTML =
+    `Importing as <b>${esc(PDF_REVIEW.ourTeam)}</b> <span class="vs">vs ${esc(PDF_REVIEW.oppTeam || 'opponent')}</span>`;
+
+  const batBody = document.getElementById('pdfBatRows');
+  batBody.innerHTML = PDF_REVIEW.batting.length
+    ? PDF_REVIEW.batting.map((b, i) => {
+        const fig = `${b.runs}<span style="color:var(--text-3)"> (${b.balls})</span>${b.notOut ? '<span class="no">*</span>' : ''}`;
+        return mapRowHTML('bat', i, b.name, fig, matchRoster(b.name));
+      }).join('')
+    : '<div class="pdf-review-empty">No batting innings found for this side.</div>';
+
+  const bowlBody = document.getElementById('pdfBowlRows');
+  bowlBody.innerHTML = PDF_REVIEW.bowling.length
+    ? PDF_REVIEW.bowling.map((b, i) => {
+        const fig = `${fmtOvers(b.overs)}-${b.runs}-${b.wickets}`;
+        return mapRowHTML('bowl', i, b.name, fig, matchRoster(b.name));
+      }).join('')
+    : '<div class="pdf-review-empty">No bowling figures found for this side.</div>';
+}
+function onPdfMapChange(sel) {
+  sel.classList.toggle('is-new', sel.value === '__add__');
+  sel.classList.toggle('is-skip', sel.value === '__skip__');
+}
+function closePdfReview() { document.getElementById('pdfReviewBg').classList.remove('open'); }
+function closePdfReviewIfBg(e) { if (e.target.id === 'pdfReviewBg') closePdfReview(); }
+
+function ensurePlayer(name) {
+  let p = DATA.players.find(x => x.name.toLowerCase() === name.toLowerCase());
+  if (!p) { p = { name, group: '', bowlGroup: '', scores: {}, bowling: {} }; DATA.players.push(p); }
+  return p;
+}
+function resolveMapped(kind, idx, name) {
+  const sel = document.getElementById('pmap_' + kind + '_' + idx);
+  if (!sel || sel.value === '__skip__') return null;
+  if (sel.value === '__add__') return ensurePlayer(name);
+  return DATA.players.find(p => p.name === sel.value) || null;
+}
+// Write the reviewed figures into DATA and surface them in the edit form.
+function applyPdfImport() {
+  const id = (document.getElementById('pdfMatchId').value || '').trim();
+  if (!id) { toast('Match ID is required', true); return; }
+  const opp = document.getElementById('pdfMatchOpp').value.trim();
+  const date = document.getElementById('pdfMatchDate').value;
+
+  let m = DATA.matches.find(x => x.id === id);
+  if (!m) { m = { id, opponent: opp, date }; DATA.matches.push(m); }
+  else { m.opponent = opp; m.date = date; }
+
+  let added = 0, batN = 0, bowlN = 0;
+  const before = DATA.players.length;
+  PDF_REVIEW.batting.forEach((b, i) => {
+    const p = resolveMapped('bat', i, b.name);
+    if (!p) return;
+    p.scores = p.scores || {};
+    p.scores[id] = { runs: b.runs, balls: b.balls, notOut: !!b.notOut };
+    batN++;
+  });
+  PDF_REVIEW.bowling.forEach((b, i) => {
+    const p = resolveMapped('bowl', i, b.name);
+    if (!p) return;
+    p.bowling = p.bowling || {};
+    p.bowling[id] = { overs: b.overs, runs: b.runs, wickets: b.wickets };
+    bowlN++;
+  });
+  added = DATA.players.length - before;
+
+  markUnsaved();
+  closePdfReview();
+  switchTab('edit');
+  renderEditForm();
+  document.getElementById('matchSelect').value = id;
+  loadMatchIntoForm(id);
+  document.getElementById('matchId').value = id;
+  document.getElementById('matchOpp').value = opp;
+  document.getElementById('matchDate').value = date;
+  refreshAll();
+  toast(`Imported ${id}: ${batN} batting, ${bowlN} bowling${added ? `, ${added} new player${added > 1 ? 's' : ''}` : ''} · press Save to push`);
 }
 
 /* ============ GITHUB SYNC ============ */
