@@ -2254,11 +2254,9 @@ async function fetchSHA() {
     if (r.ok) {
       const j = await r.json();
       dataSHA = j.sha;
-      try {
-        const content = atob(j.content.replace(/\s/g, ''));
-        const parsed = JSON.parse(decodeURIComponent(escape(content)));
-        if (parsed && parsed.matches && parsed.players) DATA = normalize(parsed);
-      } catch (e) {}
+      // Only the SHA is needed for the update. Do NOT reload DATA from the
+      // remote here — that would clobber unsaved local edits (e.g. a freshly
+      // imported PDF) in the instant before saveToGitHub serializes DATA.
     } else if (r.status === 404) {
       dataSHA = null;
     } else throw new Error('GitHub returned ' + r.status);
