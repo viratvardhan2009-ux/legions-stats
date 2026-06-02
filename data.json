@@ -15,6 +15,11 @@
       "id": "M3",
       "opponent": "IndusJr.CricketClub",
       "date": "2026-01-06"
+    },
+    {
+      "id": "M4",
+      "opponent": "CricMaxB",
+      "date": "2026-01-06"
     }
   ],
   "players": [
@@ -76,9 +81,20 @@
           "runs": 0,
           "balls": 3,
           "notOut": false
+        },
+        "M4": {
+          "runs": 4,
+          "balls": 4,
+          "notOut": false
         }
       },
-      "bowling": {}
+      "bowling": {
+        "M4": {
+          "overs": 2,
+          "runs": 18,
+          "wickets": 0
+        }
+      }
     },
     {
       "name": "Sugin Samuel",
@@ -170,6 +186,11 @@
           "runs": 9,
           "balls": 28,
           "notOut": false
+        },
+        "M4": {
+          "runs": 42,
+          "balls": 43,
+          "notOut": false
         }
       },
       "bowling": {
@@ -187,6 +208,11 @@
           "overs": 5,
           "runs": 18,
           "wickets": 1
+        },
+        "M4": {
+          "overs": 8,
+          "runs": 46,
+          "wickets": 2
         }
       }
     },
@@ -204,9 +230,20 @@
           "runs": 4,
           "balls": 12,
           "notOut": false
+        },
+        "M4": {
+          "runs": 45,
+          "balls": 35,
+          "notOut": false
         }
       },
-      "bowling": {}
+      "bowling": {
+        "M4": {
+          "overs": 3,
+          "runs": 25,
+          "wickets": 0
+        }
+      }
     },
     {
       "name": "Josento Alapatt",
@@ -222,6 +259,11 @@
           "runs": 0,
           "balls": 2,
           "notOut": false
+        },
+        "M4": {
+          "runs": 30,
+          "balls": 33,
+          "notOut": false
         }
       },
       "bowling": {
@@ -229,6 +271,11 @@
           "overs": 4,
           "runs": 15,
           "wickets": 2
+        },
+        "M4": {
+          "overs": 4,
+          "runs": 26,
+          "wickets": 0
         }
       }
     },
@@ -270,6 +317,11 @@
           "runs": 2,
           "balls": 7,
           "notOut": false
+        },
+        "M4": {
+          "runs": 19,
+          "balls": 15,
+          "notOut": false
         }
       },
       "bowling": {
@@ -287,6 +339,11 @@
           "overs": 3,
           "runs": 18,
           "wickets": 0
+        },
+        "M4": {
+          "overs": 5,
+          "runs": 33,
+          "wickets": 1
         }
       }
     },
@@ -309,6 +366,11 @@
           "runs": 2,
           "balls": 5,
           "notOut": true
+        },
+        "M4": {
+          "runs": 9,
+          "balls": 28,
+          "notOut": true
         }
       },
       "bowling": {
@@ -326,6 +388,11 @@
           "overs": 4.2,
           "runs": 21,
           "wickets": 1
+        },
+        "M4": {
+          "overs": 4,
+          "runs": 21,
+          "wickets": 0
         }
       }
     },
@@ -356,12 +423,22 @@
           "runs": 27,
           "balls": 70,
           "notOut": false
+        },
+        "M4": {
+          "runs": 6,
+          "balls": 16,
+          "notOut": false
         }
       },
       "bowling": {
         "M3": {
           "overs": 1,
           "runs": 6,
+          "wickets": 0
+        },
+        "M4": {
+          "overs": 5,
+          "runs": 27,
           "wickets": 0
         }
       }
@@ -375,6 +452,11 @@
           "runs": 2,
           "balls": 12,
           "notOut": true
+        },
+        "M4": {
+          "runs": 1,
+          "balls": 2,
+          "notOut": false
         }
       },
       "bowling": {}
@@ -401,6 +483,11 @@
           "runs": 2,
           "balls": 4,
           "notOut": false
+        },
+        "M4": {
+          "runs": 12,
+          "balls": 25,
+          "notOut": false
         }
       },
       "bowling": {
@@ -408,6 +495,11 @@
           "overs": 2,
           "runs": 14,
           "wickets": 0
+        },
+        "M4": {
+          "overs": 6,
+          "runs": 49,
+          "wickets": 1
         }
       }
     },
@@ -432,6 +524,38 @@
         "M3": {
           "runs": 4,
           "balls": 17,
+          "notOut": false
+        }
+      },
+      "bowling": {}
+    },
+    {
+      "name": "Ashish Cheriyan",
+      "group": "",
+      "bowlGroup": "",
+      "scores": {
+        "M4": {
+          "runs": 29,
+          "balls": 29,
+          "notOut": false
+        }
+      },
+      "bowling": {
+        "M4": {
+          "overs": 3,
+          "runs": 27,
+          "wickets": 0
+        }
+      }
+    },
+    {
+      "name": "Abel Joy",
+      "group": "",
+      "bowlGroup": "",
+      "scores": {
+        "M4": {
+          "runs": 8,
+          "balls": 13,
           "notOut": false
         }
       },
