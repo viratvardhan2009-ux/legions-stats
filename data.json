@@ -5,6 +5,11 @@
       "id": "M1",
       "opponent": "Jersey Titans Cricket Academy",
       "date": "2026-03-05"
+    },
+    {
+      "id": "M2",
+      "opponent": "Dreamcricket Panthers",
+      "date": "2026-10-05"
     }
   ],
   "players": [
@@ -17,12 +22,22 @@
           "runs": 3,
           "balls": 4,
           "notOut": false
+        },
+        "M2": {
+          "runs": 6,
+          "balls": 10,
+          "notOut": false
         }
       },
       "bowling": {
         "M1": {
           "overs": 4,
           "runs": 7,
+          "wickets": 1
+        },
+        "M2": {
+          "overs": 2,
+          "runs": 16,
           "wickets": 1
         }
       }
@@ -35,6 +50,11 @@
         "M1": {
           "runs": 11,
           "balls": 20,
+          "notOut": false
+        },
+        "M2": {
+          "runs": 2,
+          "balls": 14,
           "notOut": false
         }
       },
@@ -81,12 +101,22 @@
           "runs": 37,
           "balls": 37,
           "notOut": false
+        },
+        "M2": {
+          "runs": 1,
+          "balls": 10,
+          "notOut": false
         }
       },
       "bowling": {
         "M1": {
           "overs": 5,
           "runs": 4,
+          "wickets": 0
+        },
+        "M2": {
+          "overs": 3.4,
+          "runs": 9,
           "wickets": 0
         }
       }
@@ -100,6 +130,11 @@
           "runs": 27,
           "balls": 32,
           "notOut": false
+        },
+        "M2": {
+          "runs": 15,
+          "balls": 42,
+          "notOut": false
         }
       },
       "bowling": {
@@ -107,6 +142,11 @@
           "overs": 3,
           "runs": 7,
           "wickets": 2
+        },
+        "M2": {
+          "overs": 3,
+          "runs": 20,
+          "wickets": 1
         }
       }
     },
@@ -118,6 +158,11 @@
         "M1": {
           "runs": 4,
           "balls": 4,
+          "notOut": false
+        },
+        "M2": {
+          "runs": 4,
+          "balls": 12,
           "notOut": false
         }
       },
@@ -131,6 +176,11 @@
         "M1": {
           "runs": 4,
           "balls": 15,
+          "notOut": false
+        },
+        "M2": {
+          "runs": 0,
+          "balls": 2,
           "notOut": false
         }
       },
@@ -170,12 +220,22 @@
           "runs": 6,
           "balls": 8,
           "notOut": true
+        },
+        "M2": {
+          "runs": 1,
+          "balls": 2,
+          "notOut": false
         }
       },
       "bowling": {
         "M1": {
           "overs": 4,
           "runs": 7,
+          "wickets": 1
+        },
+        "M2": {
+          "overs": 2,
+          "runs": 16,
           "wickets": 1
         }
       }
@@ -189,6 +249,11 @@
           "runs": 0,
           "balls": 2,
           "notOut": false
+        },
+        "M2": {
+          "runs": 0,
+          "balls": 1,
+          "notOut": false
         }
       },
       "bowling": {
@@ -196,8 +261,52 @@
           "overs": 1,
           "runs": 2,
           "wickets": 2
+        },
+        "M2": {
+          "overs": 1,
+          "runs": 2,
+          "wickets": 0
         }
       }
+    },
+    {
+      "name": "Aakash Gunsola",
+      "group": "",
+      "bowlGroup": "",
+      "scores": {
+        "M2": {
+          "runs": 0,
+          "balls": 2,
+          "notOut": false
+        }
+      },
+      "bowling": {}
+    },
+    {
+      "name": "Jameel Velakkatt Moideen",
+      "group": "",
+      "bowlGroup": "",
+      "scores": {
+        "M2": {
+          "runs": 16,
+          "balls": 36,
+          "notOut": false
+        }
+      },
+      "bowling": {}
+    },
+    {
+      "name": "Yuvaraj Manimaran",
+      "group": "",
+      "bowlGroup": "",
+      "scores": {
+        "M2": {
+          "runs": 2,
+          "balls": 12,
+          "notOut": true
+        }
+      },
+      "bowling": {}
     }
   ]
 }
