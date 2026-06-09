@@ -20,6 +20,11 @@
       "id": "M4",
       "opponent": "CricMaxB",
       "date": "2026-01-06"
+    },
+    {
+      "id": "M5",
+      "opponent": "NJTitansCricketClub",
+      "date": "2026-07-06"
     }
   ],
   "players": [
@@ -42,6 +47,11 @@
           "runs": 2,
           "balls": 17,
           "notOut": false
+        },
+        "M5": {
+          "runs": 10,
+          "balls": 18,
+          "notOut": false
         }
       },
       "bowling": {
@@ -59,6 +69,11 @@
           "overs": 1,
           "runs": 11,
           "wickets": 0
+        },
+        "M5": {
+          "overs": 2,
+          "runs": 15,
+          "wickets": 1
         }
       }
     },
@@ -147,6 +162,11 @@
           "runs": 14,
           "balls": 27,
           "notOut": false
+        },
+        "M5": {
+          "runs": 7,
+          "balls": 10,
+          "notOut": false
         }
       },
       "bowling": {
@@ -164,6 +184,11 @@
           "overs": 8,
           "runs": 19,
           "wickets": 1
+        },
+        "M5": {
+          "overs": 8,
+          "runs": 7,
+          "wickets": 2
         }
       }
     },
@@ -191,6 +216,11 @@
           "runs": 42,
           "balls": 43,
           "notOut": false
+        },
+        "M5": {
+          "runs": 0,
+          "balls": 5,
+          "notOut": false
         }
       },
       "bowling": {
@@ -213,6 +243,11 @@
           "overs": 8,
           "runs": 46,
           "wickets": 2
+        },
+        "M5": {
+          "overs": 6.2,
+          "runs": 19,
+          "wickets": 1
         }
       }
     },
@@ -371,6 +406,11 @@
           "runs": 9,
           "balls": 28,
           "notOut": true
+        },
+        "M5": {
+          "runs": 5,
+          "balls": 13,
+          "notOut": false
         }
       },
       "bowling": {
@@ -393,6 +433,11 @@
           "overs": 4,
           "runs": 21,
           "wickets": 0
+        },
+        "M5": {
+          "overs": 5,
+          "runs": 21,
+          "wickets": 2
         }
       }
     },
@@ -428,6 +473,11 @@
           "runs": 6,
           "balls": 16,
           "notOut": false
+        },
+        "M5": {
+          "runs": 20,
+          "balls": 40,
+          "notOut": false
         }
       },
       "bowling": {
@@ -440,6 +490,11 @@
           "overs": 5,
           "runs": 27,
           "wickets": 0
+        },
+        "M5": {
+          "overs": 7,
+          "runs": 22,
+          "wickets": 1
         }
       }
     },
@@ -456,6 +511,11 @@
         "M4": {
           "runs": 1,
           "balls": 2,
+          "notOut": false
+        },
+        "M5": {
+          "runs": 19,
+          "balls": 22,
           "notOut": false
         }
       },
@@ -488,6 +548,11 @@
           "runs": 12,
           "balls": 25,
           "notOut": false
+        },
+        "M5": {
+          "runs": 29,
+          "balls": 30,
+          "notOut": false
         }
       },
       "bowling": {
@@ -500,6 +565,11 @@
           "overs": 6,
           "runs": 49,
           "wickets": 1
+        },
+        "M5": {
+          "overs": 6,
+          "runs": 25,
+          "wickets": 2
         }
       }
     },
@@ -557,6 +627,51 @@
           "runs": 8,
           "balls": 13,
           "notOut": false
+        }
+      },
+      "bowling": {}
+    },
+    {
+      "name": "Sreenath Viswarajan",
+      "group": "",
+      "bowlGroup": "",
+      "scores": {
+        "M5": {
+          "runs": 0,
+          "balls": 4,
+          "notOut": false
+        }
+      },
+      "bowling": {}
+    },
+    {
+      "name": "Anil Pastam",
+      "group": "",
+      "bowlGroup": "",
+      "scores": {
+        "M5": {
+          "runs": 3,
+          "balls": 9,
+          "notOut": false
+        }
+      },
+      "bowling": {
+        "M5": {
+          "overs": 3,
+          "runs": 29,
+          "wickets": 0
+        }
+      }
+    },
+    {
+      "name": "Nagaraj Rajangam Selvaraj",
+      "group": "",
+      "bowlGroup": "",
+      "scores": {
+        "M5": {
+          "runs": 0,
+          "balls": 4,
+          "notOut": true
         }
       },
       "bowling": {}
